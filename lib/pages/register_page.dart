@@ -1,3 +1,5 @@
+import 'package:conductor_amigo/pages/login_page.dart';
+import 'package:conductor_amigo/pages/usuario_comun_page.dart';
 import 'package:flutter/material.dart';
 
 List<String> rolList = <String>['Elija su rol','Usuario Común', 'Conductor Amigo'];
@@ -13,6 +15,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final TextEditingController _identificacionController = TextEditingController();
   final TextEditingController _correoController = TextEditingController();
+  final TextEditingController _contraseniaController = TextEditingController();
+  final TextEditingController _repetirContraseniaController = TextEditingController();
   String dropdownValue = rolList.first;
 
   @override
@@ -20,7 +24,8 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body:
-        Center(
+        SingleChildScrollView(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -47,14 +52,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.w300,
                             fontSize: 20
-                          ),
-                        )
-                      ]
-                    )
-                  ),
+                        ),
+                      )
+                    ]
+                  )
                 ),
+              ),
               Padding(padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 64),
-                child: SingleChildScrollView(
                   child: Column(
                     children: [
                       const Text("Queremos conocerte, ingresa tus datos:",
@@ -66,8 +70,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       _buildInputField(_identificacionController, "Identificacion"),
-                      _buildInputField(_correoController, "Correo institucional"),
-                      const SizedBox(height: 20),
+                      _buildInputField(_correoController, "Correo Institucional"),
+                      const SizedBox(height: 10),
                       DropdownButton<String>(
                         value: dropdownValue,
                         icon: const Icon(Icons.arrow_drop_down,
@@ -101,19 +105,20 @@ class _RegisterPageState extends State<RegisterPage> {
                         );
                       }).toList(),
                       ),
-                      const SizedBox(height: 230),
-                      _buildElevatedButton(0xFF7DB006, "REGISTRARSE"),
+                      _buildInputField(_contraseniaController, "Contraseña",isPassword: true),
+                      _buildInputField(_repetirContraseniaController, "Repetir Contraseña",isPassword: true),
+                      const SizedBox(height: 150),
+                      _buildElevatedButton(0xFF7DB006, "REGISTRARSE",true,context),
                       const SizedBox(height: 20),
-                      _buildElevatedButton(0xFFC74A4D, "SALIR")
-
-                    ],
-                  ),
+                      _buildElevatedButton(0xFFC74A4D, "SALIR",false,context)
+                  ],
                 ),
               ),
-            ],
+            ]
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -133,14 +138,27 @@ Widget _buildInputField(TextEditingController controller,String labelName,{isPas
         ),
         enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey,width: 1)
-        )
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey ,width: 2), // Cambia el color de resaltado aquí
+        ),
     ),
     obscureText: isPassword,
   );
 }
 
-Widget _buildElevatedButton(int colorButton, String text){
-  return ElevatedButton(onPressed: (){},
+Widget _buildElevatedButton(int colorButton, String text,bool registrarUsuario,BuildContext context){
+  return ElevatedButton(onPressed: (){
+    if(registrarUsuario) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UsuarioComunPage())
+      );
+    }
+    else{
+      _mostrarMensaje(context);
+    }
+  },
     style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: Color(colorButton),
@@ -153,5 +171,92 @@ Widget _buildElevatedButton(int colorButton, String text){
           fontFamily: 'Ubuntu',
           fontWeight: FontWeight.w300),
     ),
+  );
+}
+
+void _mostrarMensaje(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // Construye el cuadro de diálogo personalizado
+      return AlertDialog(
+        title: const Text(
+          'Ya casi está...\n'
+          '¿Estás segur@?',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.w500),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'El proceso de registro es\n'
+              'indispensble para que puedas\n'
+              'iniciar en la platarforma y\n'
+              'empezar a contactarte con tu\n'
+              'Conductor Amigo. ',
+              style: TextStyle(
+                  fontFamily: 'Ubuntu',
+                  fontWeight: FontWeight.w400),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+                    // Agregar aquí la lógica para salir de la aplicación
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)
+                    ),
+                    backgroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'CANCELAR',
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const LoginPage())
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)
+                    ),
+                  ),
+                  child: const Text(
+                    'SALIR',
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        fontWeight: FontWeight.w400,
+                        color: Colors.red
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        backgroundColor: Colors.white
+      );
+    },
   );
 }

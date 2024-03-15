@@ -13,48 +13,56 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF7DB006),
-      body:
-        Padding(padding: const EdgeInsets.symmetric(horizontal: 32,vertical: 32),
-          child: Center(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                const SizedBox(height: 32,),
-                const Image(
-                      image: AssetImage('lib/asset/image/ConductorAmigoLogo.png'),
-                      fit: BoxFit.fill,
-                      width: 160,
-                 ),
+                Image.asset(
+                  'lib/asset/image/ConductorAmigoLogo.png',
+                  fit: BoxFit.contain,
+                  width: 160,
+                ),
+                const SizedBox(height: 16,),
                 _buildForm(),
+                const SizedBox(height: 16,),
                 const Row(
-                    children: [
-                      Expanded(child:
-                      Divider(
+                  children: [
+                    Expanded(
+                      child: Divider(
                         thickness: 1.2,
                         color: Colors.white,
                         endIndent: 20,
                       ),
+                    ),
+                    Text(
+                      'O',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.w300
                       ),
-                      Text('O',
-                        style: TextStyle(color: Colors.white,
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w300),
-                      ),
-                      Expanded(child:
-                      Divider(
+                    ),
+                    Expanded(
+                      child: Divider(
                         thickness: 1.2,
                         color: Colors.white,
                         indent: 20,
                       ),
-                      )
-                    ],
-                  ),
-                ElevatedButton.icon(onPressed: (){
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const RegisterPage())
+                    )
+                  ],
+                ),
+                const SizedBox(height: 32,),
+                ElevatedButton.icon(
+                  onPressed: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const RegisterPage())
                     );
                   },
-                    icon: const Icon(Icons.mail_outlined,
+                  icon: const Icon(
+                    Icons.mail_outlined,
                     size: 40,
                     color: Colors.white,
                   ),
@@ -63,26 +71,29 @@ class _LoginPageState extends State<LoginPage> {
                       backgroundColor: const Color(0xFFC2C8CF),
                       elevation: 20,
                       shadowColor: const Color(0xFF14612C),
-                      minimumSize: const Size.fromHeight(50)
+                      minimumSize: Size.fromHeight(50)
                   ),
-                  label: const Text('INGRESAR CON GOOGLE',
-                    style: TextStyle(color: Colors.white,
+                  label: const Text(
+                    'INGRESAR CON GOOGLE',
+                    style: TextStyle(
+                        color: Colors.white,
                         fontFamily: 'Ubuntu',
                         fontWeight: FontWeight.w300
                     ),
                   ),
                 ),
-                const SizedBox(height: 32,),
-                const Image(
-                  image: AssetImage('lib/asset/image/UdeaLogo.png'),
-                  fit: BoxFit.fill,
+                const SizedBox(height: 64,),
+                Image.asset(
+                  'lib/asset/image/UdeaLogo.png',
+                  fit: BoxFit.contain,
                   width: 120,
                 ),
               ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -113,7 +124,10 @@ Widget _buildInputField(TextEditingController controller,String labelName,{isPas
           ),
           enabledBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white,width: 2)
-          )
+          ),
+          focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white70,width: 3), // Cambia el color de resaltado aquí
+          ),
       ),
       obscureText: isPassword,
     );
