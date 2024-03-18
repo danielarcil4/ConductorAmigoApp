@@ -1,4 +1,7 @@
-import 'package:flutter/material.dart' hide SearchBar;
+import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
+import 'package:conductor_amigo/pages/viajes_anteriores_page.dart';
+import 'chats_usuario_page.dart';
+import 'package:flutter/material.dart';
 
 class UsuarioComunPage extends StatefulWidget {
   const UsuarioComunPage({super.key});
@@ -8,139 +11,52 @@ class UsuarioComunPage extends StatefulWidget {
 }
 
 class _UsuarioComunPageState extends State<UsuarioComunPage> {
-  TextEditingController _searchController = TextEditingController();
-  String _searchText = "";
+  int _selectedIndex = 0;
 
-  void _performSearch(String searchText) {
-    // You can implement your search logic here
-    //print("Performing search for: $searchText");
-    // For demonstration, I'm just printing the search text
+  static final List<Widget> _widgetOptions = <Widget>[
+    const ViajesAnterioresPage(),
+    const PerfilUsuarioPage(),
+    const ChatsUsuarioPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: TextButton.icon(
-          onPressed: () {
-            showSearch(
-              context: context,
-              delegate: CustomSearchDelegate(),
-            );
-          },
-          icon: const Icon(
-            Icons.search,
-            color: Colors.grey,
-          ),
-          label: const Text(
-            "¿A dónde vamos?",
-            style: TextStyle(
-              color: Colors.grey,
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.w400,
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF14612C),
+        selectedItemColor: const Color(0xFF7DB006),
+        unselectedItemColor: Colors.white,
+        items: [
+           BottomNavigationBarItem(
+            icon: Icon(
+                _selectedIndex == 0 ? Icons.home : Icons.home_outlined
             ),
+            label: 'Inicio',
           ),
-          style: ButtonStyle(
-            alignment: Alignment.centerLeft,
-            backgroundColor: MaterialStateProperty.all(Colors.white),
-            // Color del fondo
-            shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(10.0), // Cambiar el radio del borde
-              ),
+          BottomNavigationBarItem(
+            icon: Icon(
+                _selectedIndex == 1 ? Icons.person : Icons.person_outlined),
+            label: 'Inicio',
+          ),
+           BottomNavigationBarItem(
+            icon: Icon(
+              _selectedIndex == 2 ?  Icons.mark_chat_unread : Icons.mark_chat_unread_outlined,
             ),
-            minimumSize:  MaterialStateProperty.all(const Size(400,45))
+            label: 'Chats',
           ),
-        ),//
-
-        flexibleSpace: Container(
-          color: const Color(0xFF7DB006),
-        ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
+      body:
+        _widgetOptions.elementAt(_selectedIndex),
     );
   }
 }
 
-class CustomSearchDelegate extends SearchDelegate<String> {
-  @override
-  String get searchFieldLabel => '¿A dónde vamos?';
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    // Acciones para el AppBar (icono de limpieza, etc.)
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    // Icono a la izquierda del AppBar (generalmente el botón de atrás)
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // Muestra los resultados basados en la búsqueda actual
-    return Center(
-      child: Text('Results for: $query'),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // Muestra sugerencias mientras se escribe la búsqueda
-    return Center(
-      child: Text('Suggestions for: $query'),
-    );
-  }
-}
-
-Widget _buildInputField(TextEditingController controller, String labelName) {
-  return TextField(
-    controller: controller,
-    decoration: InputDecoration(
-        suffixIcon: const Icon(
-          Icons.edit,
-          size: 20,
-        ),
-        labelText: labelName,
-        labelStyle: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Ubuntu',
-            fontWeight: FontWeight.w400),
-        enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 1))),
-  );
-}
-
-Widget _buildElevatedButton(int colorButton, String text) {
-  return ElevatedButton(
-    onPressed: () {},
-    style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        backgroundColor: Color(colorButton),
-        elevation: 20,
-        shadowColor: const Color(0xFF14612C),
-        minimumSize: const Size.fromHeight(50)),
-    child: Text(
-      text,
-      style: const TextStyle(
-          color: Colors.white,
-          fontFamily: 'Ubuntu',
-          fontWeight: FontWeight.w300),
-    ),
-  );
-}
