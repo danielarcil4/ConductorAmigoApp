@@ -60,7 +60,7 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
             ),
             Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 85, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
                 child: Container(
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
@@ -88,7 +88,7 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                           Icons.star,
                           color: Color(0xFF7DB006),
                         ),
-                        SizedBox(width: 12, height: 30),
+                        SizedBox(width: 15, height: 30),
                         Text(
                           "5,0 estrellas",
                           style: TextStyle(
@@ -100,7 +100,7 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                       ],
                     ))),
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 60),
+                padding: const EdgeInsets.symmetric(horizontal: 40),
                 child: Column(
                   children: [
                     _buildInputField(_identificacionController, "Identificacion"),
@@ -110,7 +110,7 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                 )),
             const SizedBox(height: 30,),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(

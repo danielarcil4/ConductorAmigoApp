@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1091142434496",
+    "project_id": "conductoramigo-b355f",
+    "storage_bucket": "conductoramigo-b355f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091142434496:android:04e2304d79cc3cf6d13725",
+        "android_client_info": {
+          "package_name": "com.example.conductor_amigo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1091142434496-7patpheuj7q62u3uo803hmplk38b7jjb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.conductor_amigo",
+            "certificate_hash": "c004151835e91815e63c19c0c2dd5ec7753d715a"
+          }
+        },
+        {
+          "client_id": "1091142434496-tahqo2rc0pmqhqepgcpmv994ijeguqes.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLlucelky6C3WlUzWSg9LqlI1iruDhm2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1091142434496-tahqo2rc0pmqhqepgcpmv994ijeguqes.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

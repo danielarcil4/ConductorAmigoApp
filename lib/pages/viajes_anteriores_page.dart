@@ -75,7 +75,7 @@ class _ViajesAnterioresPageState extends State<ViajesAnterioresPage> {
               destino: 'Rionegro, Antioquia',
               nombreConductor: 'Chukurrumi Aedo',
               fechaYhora: '24 feb,7:58 PM',
-              tarifa: 25.000,
+              tarifa: 25000,
               // Precio ofrecido por el conductor
               modeloAuto: 'Renault',
               placa: 'LKM325',
@@ -162,7 +162,7 @@ class ViajesAnterioresCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '\$${tarifa.toStringAsFixed(2)} COP - $modeloAuto, $placa',
+              '\$${tarifa.toStringAsFixed(0)} COP - $modeloAuto, $placa',
               style: const TextStyle(
                 color: Colors.black,
                 fontFamily: 'Ubuntu',
