@@ -37,6 +37,13 @@
             {
               "client_id": "1091142434496-tahqo2rc0pmqhqepgcpmv994ijeguqes.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1091142434496-ud2tao4020gjlmr2mhe2v2efrfsi7lah.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.conductorAmigo"
+              }
             }
           ]
         }
