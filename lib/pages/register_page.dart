@@ -11,13 +11,19 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+
   final TextEditingController _identificacionController =
       TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _placaController = TextEditingController();
+  final TextEditingController _colorController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _repeatpasswordController =
       TextEditingController();
+
   String? dropdownValue;
+  bool showAdditionalOptions = false;
+
   final _formKey = GlobalKey<FormState>();
   String errorTextEmail = '';
   bool isVisiblePassword = false;
@@ -27,8 +33,14 @@ class _RegisterPageState extends State<RegisterPage> {
     r'^[\w-]+@udea.edu.co',
   );
 
+  final RegExp _validatePlaca = RegExp (
+    // Expresión regular para validar el formato de la placa
+      r'^[A-Z]{3}\s?\d{3}$',
+      caseSensitive: false,
+  );
+
   Widget _buildInputField(TextEditingController controller, String labelName,
-      {isPassword = false, isOnlyNumbers = false,errorText}) {
+      {isPassword = false, isOnlyNumbers = false, isPlaca = false, isColor = false,errorText}) {
     return TextFormField(
       controller: controller,
       keyboardType: isOnlyNumbers ? TextInputType.number : TextInputType.text,
@@ -77,6 +89,19 @@ class _RegisterPageState extends State<RegisterPage> {
           } else if (value.length < 6) {
             return 'La identificacion debe tener al menos 6 caracteres';
           }
+        } else if (isPlaca) {
+          if (value!.isEmpty) {
+          return 'Por favor, ingresa la placa del vehículo';
+          } else if (!_validatePlaca.hasMatch(value)) {
+          return 'Por favor, introduce una placa válida';
+          }
+          return null;
+        } else if (isColor) {
+          if (value!.isEmpty) {
+            return 'Por favor, ingresa el color del vehículo';
+          } else {
+            return null;
+          }
         } else {
           if (value!.isEmpty) {
             return 'Por favor, ingresa tu correo';
@@ -90,7 +115,6 @@ class _RegisterPageState extends State<RegisterPage> {
           }
           return null;
         }
-        return null;
       },
     );
   }
@@ -321,14 +345,33 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return 'Elija su rol'; // Mensaje de error si no se selecciona ninguna opción
+                              return 'Elija su rol'; // Mensaje de er
+                              // ror si no se selecciona ninguna opción
                             }
                             return null; // Retorna null si la validación es exitosa
                           },
                           onChanged: (String? value) {
-                            dropdownValue = value!;
+                            setState(() {
+                              dropdownValue = value;
+                              if (value == 'Conductor Amigo') {
+                                showAdditionalOptions = true;
+                              } else {
+                                showAdditionalOptions = false;
+                              }
+                            });
                           },
                         ),
+
+                        if (showAdditionalOptions)
+                          Column(
+                            children: [
+                              _buildInputField(
+                                  _placaController, "Ingrese la placa de su vehículo", isPlaca: true),
+                              _buildInputField(
+                                  _colorController, "Ingrese el color de su vehículo", isColor: true),
+                            ],
+                          ),
+
                         _buildInputField(_passwordController, "Contraseña",
                             isPassword: true),
                         _buildInputField(
