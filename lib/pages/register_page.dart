@@ -12,14 +12,12 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
 
-  final TextEditingController _identificacionController =
-      TextEditingController();
+  final TextEditingController _identificacionController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _placaController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatpasswordController =
-      TextEditingController();
+  final TextEditingController _repeatpasswordController = TextEditingController();
 
   String? dropdownValue;
   bool showAdditionalOptions = false;
@@ -52,10 +50,16 @@ class _RegisterPageState extends State<RegisterPage> {
         suffixIcon: IconButton(
           onPressed: () {
             setState((){
+              if (!isPassword) {
+                isPassword = !isPassword;
+              } else {
+                // Toggle visibility icon
                 isVisiblePassword = !isVisiblePassword;
               }
+              }
             );
-        }, icon: Icon(!isPassword? Icons.edit :
+        },
+          icon: Icon(!isPassword? Icons.edit :
         isVisiblePassword? Icons.visibility : Icons.visibility_off
           ),
         ),
