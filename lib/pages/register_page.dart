@@ -1,5 +1,7 @@
 import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/login_page.dart';
+import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
+import 'package:conductor_amigo/pages/usuario_comun_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -375,6 +377,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         if (showAdditionalOptions)
                           Column(
                             children: [
+                              const SizedBox(height: 20),
                               _buildInputField(
                                   _modeloController, "Ingrese el modelo de su vehículo", isModelo: true),
                               const SizedBox(height: 20),
@@ -384,33 +387,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               _buildInputField(
                                   _colorController, "Ingrese el color de su vehículo", isColor: true),
                               const SizedBox(height: 20),
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const ConductorAmigoPage()));
-                                },
-                                icon: const Icon(
-                                  Icons.mail_outlined,
-                                  size: 40,
-                                  color: Colors.white,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
-                                    backgroundColor: const Color(0xFFC2C8CF),
-                                    elevation: 20,
-                                    shadowColor: const Color(0xFF14612C),
-                                    minimumSize: const Size.fromHeight(50)),
-                                label: const Text(
-                                  'INGRESAR ADMIN',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.w300),
-                                ),
-                              ),
                             ],
                           ),
 
@@ -426,6 +402,62 @@ class _RegisterPageState extends State<RegisterPage> {
                   _buildElevatedButton(0xFF7DB006, "REGISTRARSE", true, context),
                   const SizedBox(height: 20),
                   _buildElevatedButton(0xFFC74A4D, "SALIR", false, context),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ConductorAmigoPage()));
+                    },
+                    icon: const Icon(
+                      Icons.mail_outlined,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: const Color(0xFFC2C8CF),
+                        elevation: 20,
+                        shadowColor: const Color(0xFF14612C),
+                        minimumSize: const Size.fromHeight(50)),
+                    label: const Text(
+                      'Ingresar como admin a conductor amigo',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const UsuarioComunPage()));
+                    },
+                    icon: const Icon(
+                      Icons.mail_outlined,
+                      size: 40,
+                      color: Colors.white,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: const Color(0xFFC2C8CF),
+                        elevation: 20,
+                        shadowColor: const Color(0xFF14612C),
+                        minimumSize: const Size.fromHeight(50)),
+                    label: const Text(
+                      'Ingresar como admin a usuario',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
                 ],
               ),
             ),
