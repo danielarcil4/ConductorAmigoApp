@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class EditPage extends StatefulWidget {
+  const EditPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<EditPage> createState() => _EditPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _EditPageState extends State<EditPage> {
 
   final TextEditingController _identificacionController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -34,8 +34,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final RegExp _validatePlaca = RegExp (
     // Expresión regular para validar el formato de la placa
-      r'^[A-Z]{3}\s?\d{3}$',
-      caseSensitive: false,
+    r'^[A-Z]{3}\s?\d{3}$',
+    caseSensitive: false,
   );
 
   Widget _buildInputField(TextEditingController controller, String labelName,
@@ -57,11 +57,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Toggle visibility icon
                 isVisiblePassword = !isVisiblePassword;
               }
-              }
+            }
             );
-        },
+          },
           icon: Icon(!isPassword? Icons.edit :
-        isVisiblePassword? Icons.visibility : Icons.visibility_off
+          isVisiblePassword? Icons.visibility : Icons.visibility_off
           ),
         ),
         labelText: labelName,
@@ -102,9 +102,9 @@ class _RegisterPageState extends State<RegisterPage> {
           }
         } else if (isPlaca) {
           if (value!.isEmpty) {
-          return 'Por favor, ingresa la placa del vehículo';
+            return 'Por favor, ingresa la placa del vehículo';
           } else if (!_validatePlaca.hasMatch(value)) {
-          return 'Por favor, introduce una placa válida';
+            return 'Por favor, introduce una placa válida';
           }
           return null;
         } else if (isColor) {
@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
             return 'Por favor, ingresa tu correo';
           } else if (!value.contains("@udea.edu.co")) {
             return 'Por favor, introduce un correo del dominio\n '
-                    '@udea.edu.co';
+                '@udea.edu.co';
           } else if (!_emailRegExp.hasMatch(value)) {
             return 'Por favor, introduce un correo electrónico válido';
           }else if(errorTextEmail == ''){
@@ -144,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
       },
       style: ElevatedButton.styleFrom(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: Color(colorButton),
           elevation: 20,
           shadowColor: const Color(0xFF14612C),
@@ -167,10 +167,10 @@ class _RegisterPageState extends State<RegisterPage> {
         return AlertDialog(
             title: const Text(
               'Ya casi está...\n'
-              '¿Estás segur@?',
+                  '¿Estás segur@?',
               textAlign: TextAlign.center,
               style:
-                  TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -178,10 +178,10 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const Text(
                   'El proceso de registro es\n'
-                  'indispensble para que puedas\n'
-                  'iniciar en la platarforma y\n'
-                  'empezar a contactarte con tu\n'
-                  'Conductor Amigo. ',
+                      'indispensble para que puedas\n'
+                      'iniciar en la platarforma y\n'
+                      'empezar a contactarte con tu\n'
+                      'Conductor Amigo. ',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -274,7 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "¡Regístrate!",
+                          "Edita tu viaje",
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Ubuntu',
@@ -282,12 +282,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontSize: 30),
                         ),
                         Text(
-                          "Aquí puedes crear tu nueva cuenta",
+                          "Cambia los detalles de tus viajes programados",
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.w300,
-                              fontSize: 20),
+                              fontSize: 15),
                         )
                       ])),
             ),
@@ -296,12 +296,13 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: [
                   const Text(
-                    "Queremos conocerte, ingresa tus datos:",
+                    "¡Recuerda que tus viajes programados reservados por Usuarios Amigos no pueden ser modificados!",
                     style: TextStyle(
                         color: Colors.grey,
                         fontFamily: 'Ubuntu',
                         fontWeight: FontWeight.w400,
                         fontSize: 14),
+                        textAlign: TextAlign.center,
                   ),
                   Form(
                     key: _formKey,
@@ -326,7 +327,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           items: <String>[
                             'Usuario Común',
                             'Conductor Amigo'
-                            ].map<DropdownMenuItem<String>>((String value) {
+                          ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -394,9 +395,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 130),
-                  _buildElevatedButton(0xFF7DB006, "REGISTRARSE", true, context),
+                  _buildElevatedButton(0xFF7DB006, "ELIMINAR VIAJE", false, context),
+                  const SizedBox(height: 130),
+                  _buildElevatedButton(0xFF7DB006, "GUARDAR CAMBIOS", true, context),
                   const SizedBox(height: 20),
-                  _buildElevatedButton(0xFFC74A4D, "SALIR", false, context),
+                  _buildElevatedButton(0xFFC74A4D, "CANCELAR", false, context),
                 ],
               ),
             ),
