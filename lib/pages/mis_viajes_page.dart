@@ -111,7 +111,7 @@ class viajesProgramadosCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.calendar_month,
-                  size: 40,
+                  size: 50,
                   color: Color(0xFF14612C),
                 ),
                 Padding(
@@ -160,7 +160,7 @@ class viajesProgramadosCard extends StatelessWidget {
                     },
                     icon: const Icon(
                       Icons.edit,
-                      size: 40,
+                      size: 30,
                     ),
                 )
               ],

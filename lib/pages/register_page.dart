@@ -1,3 +1,4 @@
+import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -121,8 +122,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     '@udea.edu.co';
           } else if (!_emailRegExp.hasMatch(value)) {
             return 'Por favor, introduce un correo electrónico válido';
-          }else if(errorTextEmail == ''){
-            return 'Si';
           }
           return null;
         }
@@ -378,10 +377,40 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               _buildInputField(
                                   _modeloController, "Ingrese el modelo de su vehículo", isModelo: true),
+                              const SizedBox(height: 20),
                               _buildInputField(
                                   _placaController, "Ingrese la placa de su vehículo", isPlaca: true),
+                              const SizedBox(height: 20),
                               _buildInputField(
                                   _colorController, "Ingrese el color de su vehículo", isColor: true),
+                              const SizedBox(height: 20),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const ConductorAmigoPage()));
+                                },
+                                icon: const Icon(
+                                  Icons.mail_outlined,
+                                  size: 40,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10)),
+                                    backgroundColor: const Color(0xFFC2C8CF),
+                                    elevation: 20,
+                                    shadowColor: const Color(0xFF14612C),
+                                    minimumSize: const Size.fromHeight(50)),
+                                label: const Text(
+                                  'INGRESAR ADMIN',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Ubuntu',
+                                      fontWeight: FontWeight.w300),
+                                ),
+                              ),
                             ],
                           ),
 

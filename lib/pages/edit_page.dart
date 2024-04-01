@@ -1,4 +1,6 @@
+import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/login_page.dart';
+import 'package:conductor_amigo/pages/perfil_conductor_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -166,7 +168,6 @@ class _EditPageState extends State<EditPage> {
         // Construye el cuadro de diálogo personalizado
         return AlertDialog(
             title: const Text(
-              'Ya casi está...\n'
                   '¿Estás segur@?',
               textAlign: TextAlign.center,
               style:
@@ -177,11 +178,12 @@ class _EditPageState extends State<EditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'El proceso de registro es\n'
-                      'indispensble para que puedas\n'
-                      'iniciar en la platarforma y\n'
-                      'empezar a contactarte con tu\n'
-                      'Conductor Amigo. ',
+                      'Eliminarás permanentemente\n'
+                      'tu viaje programado.\n'
+                      'Recuerda que serás penalizado\n'
+                      'si eliminas tu viaje a 2 horas o\n'
+                      'menos antes de la hora de\n'
+                      'salida',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -201,7 +203,7 @@ class _EditPageState extends State<EditPage> {
                         backgroundColor: Colors.white,
                       ),
                       child: const Text(
-                        'CANCELAR',
+                        'REGRESAR',
                         style: TextStyle(
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.w400,
@@ -214,14 +216,14 @@ class _EditPageState extends State<EditPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
+                                builder: (context) => const ConductorAmigoPage()));
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0)),
                       ),
                       child: const Text(
-                        'SALIR',
+                        'ELIMINAR',
                         style: TextStyle(
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.w400,
@@ -309,10 +311,10 @@ class _EditPageState extends State<EditPage> {
                     child: Column(
                       children: [
                         _buildInputField(
-                            _identificacionController, "Identificacion",
-                            isOnlyNumbers: true),
+                            _identificacionController, "Punto de Recogida",
+                            isOnlyNumbers: false),
                         _buildInputField(
-                            _emailController, "Correo Institucional",errorText: errorTextEmail),
+                            _emailController, "Lugar de Destino",errorText: errorTextEmail),
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           value: dropdownValue,
@@ -325,8 +327,10 @@ class _EditPageState extends State<EditPage> {
                           itemHeight: 60,
                           style: const TextStyle(color: Colors.black),
                           items: <String>[
-                            'Usuario Común',
-                            'Conductor Amigo'
+                            '1',
+                            '2',
+                            '3',
+                            '4'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -341,7 +345,7 @@ class _EditPageState extends State<EditPage> {
                             );
                           }).toList(),
                           decoration: const InputDecoration(
-                            labelText: 'Elija su rol',
+                            labelText: 'Número de Pasajeros',
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: 'Ubuntu',
@@ -357,7 +361,7 @@ class _EditPageState extends State<EditPage> {
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return 'Elija su rol'; // Mensaje de er
+                              return 'Elija el número de pasajeros disponibles'; // Mensaje de er
                               // ror si no se selecciona ninguna opción
                             }
                             return null; // Retorna null si la validación es exitosa
@@ -386,20 +390,17 @@ class _EditPageState extends State<EditPage> {
                             ],
                           ),
 
-                        _buildInputField(_passwordController, "Contraseña",
-                            isPassword: true),
-                        _buildInputField(
-                            _repeatpasswordController, "Repetir Contraseña",
-                            isPassword: true),
+                        _buildInputField(_passwordController, "Valor del servicio",isOnlyNumbers: true,
+                            isPassword: false),
                       ],
                     ),
                   ),
                   const SizedBox(height: 130),
-                  _buildElevatedButton(0xFF7DB006, "ELIMINAR VIAJE", false, context),
-                  const SizedBox(height: 130),
                   _buildElevatedButton(0xFF7DB006, "GUARDAR CAMBIOS", true, context),
                   const SizedBox(height: 20),
-                  _buildElevatedButton(0xFFC74A4D, "CANCELAR", false, context),
+                  _buildElevatedButton(0xFFC74A4D, "ELIMINAR VIAJE", false, context),
+                  const SizedBox(height: 20),
+                  _buildElevatedButton(0x809E9E9E, "CANCELAR", false, context),
                 ],
               ),
             ),
