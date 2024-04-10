@@ -73,7 +73,7 @@ class _ViajesAnterioresPageState extends State<ViajesAnterioresPage> {
             ),
             ViajesAnterioresCard(
               destino: 'Rionegro, Antioquia',
-              nombreConductor: 'Chukurrumi Aedo',
+              nombreConductor: 'Daniel Arcila',
               fechaYhora: '24 feb,7:58 PM',
               tarifa: 25000,
               // Precio ofrecido por el conductor

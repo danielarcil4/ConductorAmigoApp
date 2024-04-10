@@ -242,14 +242,14 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> signUp() async {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const LoginPage()));
     try {
       final credential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorTextEmail = 'Este correo ya esta registrado';
