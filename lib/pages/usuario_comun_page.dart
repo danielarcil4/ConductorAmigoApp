@@ -2,6 +2,8 @@ import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
 import 'package:conductor_amigo/pages/viajes_anteriores_page.dart';
 import 'chats_usuario_page.dart';
 import 'package:flutter/material.dart';
+import 'package:conductor_amigo/pages/user_list.dart';
+
 
 class UsuarioComunPage extends StatefulWidget {
   const UsuarioComunPage({super.key});
@@ -16,7 +18,8 @@ class _UsuarioComunPageState extends State<UsuarioComunPage> {
   static final List<Widget> _widgetOptions = <Widget>[
     const ViajesAnterioresPage(),
     const PerfilUsuarioPage(),
-    const ChatsUsuarioPage(),
+    const UserList(),
+    //const ChatsUsuarioPage(),
   ];
 
   void _onItemTapped(int index) {

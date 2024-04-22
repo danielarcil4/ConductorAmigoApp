@@ -1,10 +1,11 @@
+import 'package:conductor_amigo/pages/auth_service.dart';
 import 'package:conductor_amigo/pages/register_page.dart';
 import 'package:conductor_amigo/pages/usuario_comun_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -16,16 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   String errorTextEmail = '';
   String errorTextPassword = '';
-// Expresión regular para validar la estructura del correo electrónico
   final RegExp _emailRegExp = RegExp(r'^[\w-\.]+@udea.edu.co',);
 
   Widget _buildInputField(TextEditingController controller, String labelName,
-      {isPassword = false,errorText}) {
+      {bool isPassword = false, String? errorText}) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
         labelText: labelName,
-        errorText: errorTextEmail == '' ? null : errorText,
+        errorText: errorText,
         labelStyle: const TextStyle(
             color: Colors.white,
             fontFamily: 'Ubuntu',
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
         focusedBorder: const UnderlineInputBorder(
           borderSide: BorderSide(
               color: Colors.white70,
-              width: 3), // Cambia el color de resaltado aquí
+              width: 3),
         ),
       ),
       obscureText: isPassword,
@@ -67,44 +67,65 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          signIn();
+          login(context);
         }
       },
       style: ElevatedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Color(colorButton),
-          elevation: 20,
-          shadowColor: const Color(0xFF14612C),
-          minimumSize: const Size.fromHeight(50)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: Color(colorButton),
+        elevation: 20,
+        shadowColor: const Color(0xFF14612C),
+        minimumSize: const Size.fromHeight(50),
+      ),
       child: Text(
         text,
         style: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Ubuntu',
-            fontWeight: FontWeight.w300),
+          color: Colors.white,
+          fontFamily: 'Ubuntu',
+          fontWeight: FontWeight.w300,
+        ),
       ),
     );
   }
 
-  Future<void> signIn() async {
+  void login(BuildContext context) async{
+
+    final authService = AuthService();
+
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      _emailController.clear();
-      _passwordController.clear();
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const UsuarioComunPage()));
-    } on FirebaseAuthException catch (e) {
-      // Actualiza el estado para mostrar los mensajes
-      // de error en los campos de texto
-      setState(() {
-        errorTextEmail = 'El usuario no existe';
-        errorTextPassword = 'O la contraseña es incorrecta';
-      });
+      await authService.signInWithEmailPassword(_emailController.text, _passwordController.text);
+      Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
+           );
     }
+    
+    catch (e){
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text(e.toString()),
+          ),
+      );
+    }
+    // Aquí puedes realizar las acciones necesarias para iniciar sesión,
+    // como por ejemplo, autenticar al usuario utilizando Firebase Auth
+    // y luego navegar a la página correspondiente.
+    // Ejemplo:
+    // try {
+    //   final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //     email: _emailController.text,
+    //     password: _passwordController.text,
+    //   );
+    //   _emailController.clear();
+    //   _passwordController.clear();
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
+    //   );
+    // } on FirebaseAuthException catch (e) {
+    //   // Manejar posibles errores de autenticación aquí
+    // }
   }
 
   @override
@@ -127,31 +148,31 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Form(
                       key: _formKey,
-                        child: Column(
-                          children: [
-                            _buildInputField(
+                      child: Column(
+                        children: [
+                          _buildInputField(
                               _emailController,
                               'Usuario o correo electrónico',
                               errorText: errorTextEmail
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            _buildInputField(
-                                _passwordController,
-                                'Contraseña',
-                                isPassword: true,
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          _buildInputField(
+                              _passwordController,
+                              'Contraseña',
+                              isPassword: true,
                               errorText: errorTextPassword
-                            ),
-                            const SizedBox(
-                              height: 32,
-                            ),
-                            _buildElevatedButton(0xFF14612C, 'INGRESAR'),
-                            const SizedBox(
-                              height: 16,
-                            )
+                          ),
+                          const SizedBox(
+                            height: 32,
+                          ),
+                          _buildElevatedButton(0xFF14612C, 'INGRESAR'),
+                          const SizedBox(
+                            height: 16,
+                          )
                         ],
-                      )
+                      ),
                     )
                   ],
                 ),

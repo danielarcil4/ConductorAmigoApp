@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'login_page.dart';
-
 class PerfilUsuarioPage extends StatefulWidget {
   const PerfilUsuarioPage({super.key});
 
@@ -17,112 +15,11 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
   final TextEditingController _rolController =
       TextEditingController(text: "Usuario Común");
 
-  Widget _buildElevatedButton(int colorButton, String text, bool cerrarSesion) {
-    return ElevatedButton(
-      onPressed: ()  {
-        if (cerrarSesion) {
-          _mensajeCerrarSesion(context);
-        }
-      },
-      style: ElevatedButton.styleFrom(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Color(colorButton),
-          elevation: 20,
-          shadowColor: const Color(0xFF14612C),
-          minimumSize: const Size.fromHeight(50)),
-      child: Text(
-        text,
-        style: const TextStyle(
-            color: Colors.white,
-            fontFamily: 'Ubuntu',
-            fontWeight: FontWeight.w300),
-      ),
-    );
-  }
-
-  void _mensajeCerrarSesion(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Construye el cuadro de diálogo personalizado
-        return AlertDialog(
-            title: const Text(
-              '¿Estás segur@?',
-              textAlign: TextAlign.center,
-              style:
-              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  '¿Qué quieres Cerrar Sesion?',
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pop(); // Cerrar el cuadro de diálogo
-                        // Agregar aquí la lógica para salir de la aplicación
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        backgroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        'REGRESAR',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()));
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                      ),
-                      child: const Text(
-                        'Cerrar Sesion',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.red),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            backgroundColor: Colors.white);
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
+      body: Center(
+        child: Column(
           children: [
             Container(
               color: const Color(0xFF7DB006),
@@ -263,24 +160,12 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 15,)
                   ],
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                children: [
-                  const SizedBox(height: 60),
-                  _buildElevatedButton(0xFFC74A4D, "Cerrar Sesion", true),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            ),
-
           ],
-          ),
         ),
       ),
     );

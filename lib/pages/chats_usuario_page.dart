@@ -5,7 +5,9 @@ void main() {
 }
 
 class ChatsUsuarioPage extends StatelessWidget {
-  const ChatsUsuarioPage({super.key});
+  const ChatsUsuarioPage({Key? key});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class ChatsUsuarioPage extends StatelessWidget {
 }
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({Key? key});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -29,39 +31,63 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = TextEditingController();
+  String? _selectedUser;
 
   void _handleSubmitted(String text) {
     _textController.clear();
     ChatMessage message = ChatMessage(
       text: text,
+      sender: 'User', // Agrega el remitente al mensaje
     );
     setState(() {
-      if(text!='') {
+      if (text.isNotEmpty && _selectedUser != null) {
         _messages.insert(0, message);
       }
     });
   }
 
+  Widget _buildRecipientSelector() {
+    return DropdownButton<String>(
+      value: _selectedUser,
+      onChanged: (String? newValue) {
+        setState(() {
+          _selectedUser = newValue;
+        });
+      },
+      items: <String>['User 1', 'User 2', 'User 3']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
+
+
   Widget _buildTextComposer() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Row(
-        children: [
-          Flexible(
-            child: TextField(
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Enviar un mensaje',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Divider(height: 1.0),
+        Row(
+          children: [
+            Flexible(
+              child: TextField(
+                controller: _textController,
+                onSubmitted: _handleSubmitted,
+                decoration: const InputDecoration.collapsed(
+                  hintText: 'Enviar un mensaje',
+                ),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
-          ),
-        ],
-      ),
+            IconButton(
+              icon: const Icon(Icons.send),
+              onPressed: () => _handleSubmitted(_textController.text),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -69,11 +95,18 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Chat'),
+            _buildRecipientSelector(), // Mueve el selector de destinatario aquí
+          ],
+        ),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Flexible(
+          Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(8.0),
               reverse: true,
@@ -81,7 +114,6 @@ class _ChatScreenState extends State<ChatScreen> {
               itemBuilder: (_, int index) => _messages[index],
             ),
           ),
-          const Divider(height: 1.0),
           _buildTextComposer(),
         ],
       ),
@@ -91,8 +123,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class ChatMessage extends StatelessWidget {
   final String text;
+  final String sender; // Agrega el remitente al constructor
 
-  const ChatMessage({super.key, required this.text});
+  const ChatMessage({Key? key, required this.text, required this.sender});
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +145,7 @@ class ChatMessage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'User',
+                  sender, // Muestra el remitente en lugar de 'User'
                   style: Theme.of(context).textTheme.subtitle1,
                 ),
                 Container(

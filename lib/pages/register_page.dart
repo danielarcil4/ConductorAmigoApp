@@ -1,3 +1,4 @@
+import 'package:conductor_amigo/pages/auth_service.dart';
 import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/login_page.dart';
 import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
@@ -137,7 +138,7 @@ class _RegisterPageState extends State<RegisterPage> {
       onPressed: ()  {
         if (registrarUsuario) {
           if (_formKey.currentState!.validate()) {
-            signUp();
+            signUp(context);
           }
         } else {
           _mostrarMensaje(context);
@@ -241,22 +242,38 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Future<void> signUp() async {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const LoginPage()));
+ /* Future<void> signUp() async {
     try {
       final credential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorTextEmail = 'Este correo ya esta registrado';
       });
     }
   }
+*/
+  void signUp(BuildContext context){
+    final _auth = AuthService();
 
+    try {
+      _auth.signUpWithEmailPassword(_emailController.text, _passwordController.text);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginPage()));
+    } catch (e){
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
