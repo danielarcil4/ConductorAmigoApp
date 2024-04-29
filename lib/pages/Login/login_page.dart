@@ -1,7 +1,6 @@
-import 'package:conductor_amigo/pages/auth_service.dart';
-import 'package:conductor_amigo/pages/register_page.dart';
-import 'package:conductor_amigo/pages/usuario_comun_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:conductor_amigo/pages/chat/auth_service.dart';
+import 'package:conductor_amigo/pages/Login/register_page.dart';
+import 'package:conductor_amigo/pages/usuarioAmigo/usuario_comun_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   String errorTextEmail = '';
   String errorTextPassword = '';
-  final RegExp _emailRegExp = RegExp(r'^[\w-\.]+@udea.edu.co',);
+  final RegExp _emailRegExp = RegExp(r'^[\w-.]+@udea.edu.co',);
 
   Widget _buildInputField(TextEditingController controller, String labelName,
       {bool isPassword = false, String? errorText}) {

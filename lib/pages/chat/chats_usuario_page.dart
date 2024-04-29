@@ -7,12 +7,10 @@ void main() {
 class ChatsUsuarioPage extends StatelessWidget {
   const ChatsUsuarioPage({Key? key});
 
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'WhatsApp Clone',
+      title: 'Chats',
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -99,7 +97,8 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text('Chat'),
-            _buildRecipientSelector(), // Mueve el selector de destinatario aquí
+            _buildRecipientSelector(), // Mueve el selector de destinatario
+                                      // aquí
           ],
         ),
       ),

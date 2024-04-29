@@ -1,9 +1,7 @@
-import 'package:conductor_amigo/pages/auth_service.dart';
-import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
-import 'package:conductor_amigo/pages/login_page.dart';
-import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
-import 'package:conductor_amigo/pages/usuario_comun_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:conductor_amigo/pages/chat/auth_service.dart';
+import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
+import 'package:conductor_amigo/pages/Login/login_page.dart';
+import 'package:conductor_amigo/pages/usuarioAmigo/usuario_comun_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -15,14 +13,15 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
-  final TextEditingController _identificacionController = TextEditingController();
+  final TextEditingController _identificacionController =
+      TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _placaController = TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatpasswordController = TextEditingController();
+  final TextEditingController _repeatpasswordController =
+      TextEditingController();
 
   String? dropdownValue;
   bool showAdditionalOptions = false;
@@ -36,37 +35,43 @@ class _RegisterPageState extends State<RegisterPage> {
     r'^[\w-]+@udea.edu.co',
   );
 
-  final RegExp _validatePlaca = RegExp (
+  final RegExp _validatePlaca = RegExp(
     // Expresión regular para validar el formato de la placa
-      r'^[A-Z]{3}\s?\d{3}$',
-      caseSensitive: false,
+    r'^[A-Z]{3}\s?\d{3}$',
+    caseSensitive: false,
   );
 
   Widget _buildInputField(TextEditingController controller, String labelName,
-      {isPassword = false, isOnlyNumbers = false, isModelo = false, isPlaca = false, isColor = false,errorText}) {
+      {isPassword = false,
+      isOnlyNumbers = false,
+      isModelo = false,
+      isPlaca = false,
+      isColor = false,
+      errorText}) {
     return TextFormField(
       controller: controller,
       keyboardType: isOnlyNumbers ? TextInputType.number : TextInputType.text,
       inputFormatters: isOnlyNumbers
           ? [FilteringTextInputFormatter.digitsOnly]
           : [FilteringTextInputFormatter.singleLineFormatter],
-      decoration:  InputDecoration(
+      decoration: InputDecoration(
         errorText: errorTextEmail == '' ? null : errorText,
         suffixIcon: IconButton(
           onPressed: () {
-            setState((){
+            setState(() {
               if (!isPassword) {
                 isPassword = !isPassword;
               } else {
                 // Toggle visibility icon
                 isVisiblePassword = !isVisiblePassword;
               }
-              }
-            );
-        },
-          icon: Icon(!isPassword? Icons.edit :
-        isVisiblePassword? Icons.visibility : Icons.visibility_off
-          ),
+            });
+          },
+          icon: Icon(!isPassword
+              ? Icons.edit
+              : isVisiblePassword
+                  ? Icons.visibility
+                  : Icons.visibility_off),
         ),
         labelText: labelName,
         labelStyle: const TextStyle(
@@ -81,14 +86,15 @@ class _RegisterPageState extends State<RegisterPage> {
               width: 2), // Cambia el color de resaltado aquí
         ),
       ),
-      obscureText: isPassword? !isVisiblePassword:false,
+      obscureText: isPassword ? !isVisiblePassword : false,
       validator: (value) {
         if (isPassword) {
           if (value!.isEmpty) {
             return 'Por favor, ingresa tu contraseña';
           } else if (value.length < 6) {
             return 'La contraseña debe tener al menos 6 caracteres';
-          }else if(_passwordController.text!=_repeatpasswordController.text){
+          } else if (_passwordController.text !=
+              _repeatpasswordController.text) {
             return 'Las contraseñas no son iguales';
           }
           return null;
@@ -106,9 +112,9 @@ class _RegisterPageState extends State<RegisterPage> {
           }
         } else if (isPlaca) {
           if (value!.isEmpty) {
-          return 'Por favor, ingresa la placa del vehículo';
+            return 'Por favor, ingresa la placa del vehículo';
           } else if (!_validatePlaca.hasMatch(value)) {
-          return 'Por favor, introduce una placa válida';
+            return 'Por favor, introduce una placa válida';
           }
           return null;
         } else if (isColor) {
@@ -122,20 +128,26 @@ class _RegisterPageState extends State<RegisterPage> {
             return 'Por favor, ingresa tu correo';
           } else if (!value.contains("@udea.edu.co")) {
             return 'Por favor, introduce un correo del dominio\n '
-                    '@udea.edu.co';
+                '@udea.edu.co';
           } else if (!_emailRegExp.hasMatch(value)) {
             return 'Por favor, introduce un correo electrónico válido';
+          }else {
+            return null;
           }
-          return null;
         }
+        return null;
       },
     );
   }
 
   Widget _buildElevatedButton(
-      int colorButton, String text, bool registrarUsuario, BuildContext context,) {
+    int colorButton,
+    String text,
+    bool registrarUsuario,
+    BuildContext context,
+  ) {
     return ElevatedButton(
-      onPressed: ()  {
+      onPressed: () {
         if (registrarUsuario) {
           if (_formKey.currentState!.validate()) {
             signUp(context);
@@ -242,30 +254,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
- /* Future<void> signUp() async {
-    try {
-      final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginPage()));
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        errorTextEmail = 'Este correo ya esta registrado';
-      });
-    }
-  }
-*/
-  void signUp(BuildContext context){
+  void signUp(BuildContext context) {
     final _auth = AuthService();
-
     try {
-      _auth.signUpWithEmailPassword(_emailController.text, _passwordController.text);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginPage()));
-    } catch (e){
+      _auth.signUpWithEmailPassword(
+          _emailController.text, _passwordController.text);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+    } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -274,6 +270,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -329,7 +326,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             _identificacionController, "Identificacion",
                             isOnlyNumbers: true),
                         _buildInputField(
-                            _emailController, "Correo Institucional",errorText: errorTextEmail),
+                            _emailController, "Correo Institucional",
+                            errorText: errorTextEmail),
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           value: dropdownValue,
@@ -341,10 +339,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           isExpanded: true,
                           itemHeight: 60,
                           style: const TextStyle(color: Colors.black),
-                          items: <String>[
-                            'Usuario Común',
-                            'Conductor Amigo'
-                            ].map<DropdownMenuItem<String>>((String value) {
+                          items: <String>['Usuario Común', 'Conductor Amigo']
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -362,22 +358,24 @@ class _RegisterPageState extends State<RegisterPage> {
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.w500
-                            ),
+                                fontWeight: FontWeight.w500),
                             enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 1)),
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1)),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                   color: Colors.grey,
-                                  width: 2), // Cambia el color de resaltado aquí
+                                  width:
+                                      2), // Cambia el color de resaltado aquí
                             ),
                           ),
                           validator: (value) {
                             if (value == null) {
-                              return 'Elija su rol'; // Mensaje de er
-                              // ror si no se selecciona ninguna opción
+                              return 'Elija su rol'; // Mensaje de error si no
+                              // se selecciona ninguna opción
                             }
-                            return null; // Retorna null si la validación es exitosa
+                            return null; // Retorna null si la validación es
+                            // exitosa
                           },
                           onChanged: (String? value) {
                             setState(() {
@@ -390,23 +388,24 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-
                         if (showAdditionalOptions)
                           Column(
                             children: [
                               const SizedBox(height: 20),
-                              _buildInputField(
-                                  _modeloController, "Ingrese el modelo de su vehículo", isModelo: true),
+                              _buildInputField(_modeloController,
+                                  "Ingrese el modelo de su vehículo",
+                                  isModelo: true),
                               const SizedBox(height: 20),
-                              _buildInputField(
-                                  _placaController, "Ingrese la placa de su vehículo", isPlaca: true),
+                              _buildInputField(_placaController,
+                                  "Ingrese la placa de su vehículo",
+                                  isPlaca: true),
                               const SizedBox(height: 20),
-                              _buildInputField(
-                                  _colorController, "Ingrese el color de su vehículo", isColor: true),
+                              _buildInputField(_colorController,
+                                  "Ingrese el color de su vehículo",
+                                  isColor: true),
                               const SizedBox(height: 20),
                             ],
                           ),
-
                         _buildInputField(_passwordController, "Contraseña",
                             isPassword: true),
                         _buildInputField(
@@ -416,7 +415,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 130),
-                  _buildElevatedButton(0xFF7DB006, "REGISTRARSE", true, context),
+                  _buildElevatedButton(
+                      0xFF7DB006, "REGISTRARSE", true, context),
                   const SizedBox(height: 20),
                   _buildElevatedButton(0xFFC74A4D, "SALIR", false, context),
                   const SizedBox(height: 20),
@@ -425,7 +425,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ConductorAmigoPage()));
+                              builder: (context) =>
+                                  const ConductorAmigoPage()));
                     },
                     icon: const Icon(
                       Icons.mail_outlined,

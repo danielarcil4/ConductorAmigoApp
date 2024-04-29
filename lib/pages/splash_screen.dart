@@ -1,6 +1,5 @@
-import 'package:conductor_amigo/pages/chats_usuario_page.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'Login/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

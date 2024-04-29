@@ -1,8 +1,5 @@
-import 'package:conductor_amigo/pages/perfil_conductor_page.dart';
-import 'package:conductor_amigo/pages/perfil_usuario_page.dart';
-import 'package:conductor_amigo/pages/user_list.dart';
-import 'package:conductor_amigo/pages/viajes_anteriores_page.dart';
-import 'chats_usuario_page.dart';
+import 'package:conductor_amigo/pages/ConductorAmigo/perfil_conductor_page.dart';
+import 'package:conductor_amigo/pages/chat/user_list.dart';
 import 'package:flutter/material.dart';
 
 import 'mis_viajes_page.dart';

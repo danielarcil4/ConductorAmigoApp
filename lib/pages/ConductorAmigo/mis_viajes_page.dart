@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'edit_page.dart';
+import 'package:conductor_amigo/pages/usuarioAmigo/edit_page.dart';
 
 class MisViajesPage extends StatefulWidget {
   const MisViajesPage({super.key});
@@ -10,7 +9,7 @@ class MisViajesPage extends StatefulWidget {
 }
 
 class _MisViajesPageState extends State<MisViajesPage> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
 
   void _performSearch(String searchText) {

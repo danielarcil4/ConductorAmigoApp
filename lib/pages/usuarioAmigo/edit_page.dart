@@ -1,6 +1,5 @@
-import 'package:conductor_amigo/pages/conductor_amigo_page.dart';
-import 'package:conductor_amigo/pages/login_page.dart';
-import 'package:conductor_amigo/pages/perfil_conductor_page.dart';
+import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
+import 'package:conductor_amigo/pages/Login/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,14 +12,15 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-
-  final TextEditingController _identificacionController = TextEditingController();
+  final TextEditingController _identificacionController =
+      TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _placaController = TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatpasswordController = TextEditingController();
+  final TextEditingController _repeatpasswordController =
+      TextEditingController();
 
   String? dropdownValue;
   bool showAdditionalOptions = false;
@@ -34,37 +34,43 @@ class _EditPageState extends State<EditPage> {
     r'^[\w-]+@udea.edu.co',
   );
 
-  final RegExp _validatePlaca = RegExp (
+  final RegExp _validatePlaca = RegExp(
     // Expresión regular para validar el formato de la placa
     r'^[A-Z]{3}\s?\d{3}$',
     caseSensitive: false,
   );
 
   Widget _buildInputField(TextEditingController controller, String labelName,
-      {isPassword = false, isOnlyNumbers = false, isModelo = false, isPlaca = false, isColor = false,errorText}) {
+      {isPassword = false,
+      isOnlyNumbers = false,
+      isModelo = false,
+      isPlaca = false,
+      isColor = false,
+      errorText}) {
     return TextFormField(
       controller: controller,
       keyboardType: isOnlyNumbers ? TextInputType.number : TextInputType.text,
       inputFormatters: isOnlyNumbers
           ? [FilteringTextInputFormatter.digitsOnly]
           : [FilteringTextInputFormatter.singleLineFormatter],
-      decoration:  InputDecoration(
+      decoration: InputDecoration(
         errorText: errorTextEmail == '' ? null : errorText,
         suffixIcon: IconButton(
           onPressed: () {
-            setState((){
+            setState(() {
               if (!isPassword) {
                 isPassword = !isPassword;
               } else {
                 // Toggle visibility icon
                 isVisiblePassword = !isVisiblePassword;
               }
-            }
-            );
+            });
           },
-          icon: Icon(!isPassword? Icons.edit :
-          isVisiblePassword? Icons.visibility : Icons.visibility_off
-          ),
+          icon: Icon(!isPassword
+              ? Icons.edit
+              : isVisiblePassword
+                  ? Icons.visibility
+                  : Icons.visibility_off),
         ),
         labelText: labelName,
         labelStyle: const TextStyle(
@@ -79,14 +85,15 @@ class _EditPageState extends State<EditPage> {
               width: 2), // Cambia el color de resaltado aquí
         ),
       ),
-      obscureText: isPassword? !isVisiblePassword:false,
+      obscureText: isPassword ? !isVisiblePassword : false,
       validator: (value) {
         if (isPassword) {
           if (value!.isEmpty) {
             return 'Por favor, ingresa tu contraseña';
           } else if (value.length < 6) {
             return 'La contraseña debe tener al menos 6 caracteres';
-          }else if(_passwordController.text!=_repeatpasswordController.text){
+          } else if (_passwordController.text !=
+              _repeatpasswordController.text) {
             return 'Las contraseñas no son iguales';
           }
           return null;
@@ -123,19 +130,22 @@ class _EditPageState extends State<EditPage> {
                 '@udea.edu.co';
           } else if (!_emailRegExp.hasMatch(value)) {
             return 'Por favor, introduce un correo electrónico válido';
-          }else if(errorTextEmail == ''){
+          } else if (errorTextEmail == '') {
             return 'Si';
           }
-          return null;
+          else {
+            return null;
+          }
         }
+        return null;
       },
     );
   }
 
-  Widget _buildElevatedButton(
-      int colorButton, String text, bool registrarUsuario, BuildContext context,) {
+  Widget _buildElevatedButton(int colorButton, String text,
+      bool registrarUsuario, BuildContext context) {
     return ElevatedButton(
-      onPressed: ()  {
+      onPressed: () {
         if (registrarUsuario) {
           if (_formKey.currentState!.validate()) {
             signUp();
@@ -146,7 +156,7 @@ class _EditPageState extends State<EditPage> {
       },
       style: ElevatedButton.styleFrom(
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: Color(colorButton),
           elevation: 20,
           shadowColor: const Color(0xFF14612C),
@@ -168,22 +178,22 @@ class _EditPageState extends State<EditPage> {
         // Construye el cuadro de diálogo personalizado
         return AlertDialog(
             title: const Text(
-                  '¿Estás segur@?',
+              '¿Estás segur@?',
               textAlign: TextAlign.center,
               style:
-              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+                  TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                      'Eliminarás permanentemente\n'
-                      'tu viaje programado.\n'
-                      'Recuerda que serás penalizado\n'
-                      'si eliminas tu viaje a 2 horas o\n'
-                      'menos antes de la hora de\n'
-                      'salida',
+                  'Eliminarás permanentemente\n'
+                  'tu viaje programado.\n'
+                  'Recuerda que serás penalizado\n'
+                  'si eliminas tu viaje a 2 horas o\n'
+                  'menos antes de la hora de\n'
+                  'salida',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -216,7 +226,8 @@ class _EditPageState extends State<EditPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const ConductorAmigoPage()));
+                                builder: (context) =>
+                                    const ConductorAmigoPage()));
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -245,12 +256,12 @@ class _EditPageState extends State<EditPage> {
   Future<void> signUp() async {
     try {
       final credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const LoginPage()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginPage()));
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorTextEmail = 'Este correo ya esta registrado';
@@ -298,13 +309,14 @@ class _EditPageState extends State<EditPage> {
               child: Column(
                 children: [
                   const Text(
-                    "¡Recuerda que tus viajes programados reservados por Usuarios Amigos no pueden ser modificados!",
+                    "¡Recuerda que tus viajes programados reservados por "
+                    "Usuarios Amigos no pueden ser modificados!",
                     style: TextStyle(
                         color: Colors.grey,
                         fontFamily: 'Ubuntu',
                         fontWeight: FontWeight.w400,
                         fontSize: 14),
-                        textAlign: TextAlign.center,
+                    textAlign: TextAlign.center,
                   ),
                   Form(
                     key: _formKey,
@@ -313,8 +325,8 @@ class _EditPageState extends State<EditPage> {
                         _buildInputField(
                             _identificacionController, "Punto de Recogida",
                             isOnlyNumbers: false),
-                        _buildInputField(
-                            _emailController, "Lugar de Destino",errorText: errorTextEmail),
+                        _buildInputField(_emailController, "Lugar de Destino",
+                            errorText: errorTextEmail),
                         const SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           value: dropdownValue,
@@ -326,12 +338,8 @@ class _EditPageState extends State<EditPage> {
                           isExpanded: true,
                           itemHeight: 60,
                           style: const TextStyle(color: Colors.black),
-                          items: <String>[
-                            '1',
-                            '2',
-                            '3',
-                            '4'
-                          ].map<DropdownMenuItem<String>>((String value) {
+                          items: <String>['1', '2', '3', '4']
+                              .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(
@@ -349,14 +357,15 @@ class _EditPageState extends State<EditPage> {
                             labelStyle: TextStyle(
                                 color: Colors.grey,
                                 fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.w500
-                            ),
+                                fontWeight: FontWeight.w500),
                             enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey, width: 1)),
+                                borderSide:
+                                    BorderSide(color: Colors.grey, width: 1)),
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(
                                   color: Colors.grey,
-                                  width: 2), // Cambia el color de resaltado aquí
+                                  width:
+                                      2), // Cambia el color de resaltado aquí
                             ),
                           ),
                           validator: (value) {
@@ -377,28 +386,32 @@ class _EditPageState extends State<EditPage> {
                             });
                           },
                         ),
-
                         if (showAdditionalOptions)
                           Column(
                             children: [
-                              _buildInputField(
-                                  _modeloController, "Ingrese el modelo de su vehículo", isModelo: true),
-                              _buildInputField(
-                                  _placaController, "Ingrese la placa de su vehículo", isPlaca: true),
-                              _buildInputField(
-                                  _colorController, "Ingrese el color de su vehículo", isColor: true),
+                              _buildInputField(_modeloController,
+                                  "Ingrese el modelo de su vehículo",
+                                  isModelo: true),
+                              _buildInputField(_placaController,
+                                  "Ingrese la placa de su vehículo",
+                                  isPlaca: true),
+                              _buildInputField(_colorController,
+                                  "Ingrese el color de su vehículo",
+                                  isColor: true),
                             ],
                           ),
-
-                        _buildInputField(_passwordController, "Valor del servicio",isOnlyNumbers: true,
-                            isPassword: false),
+                        _buildInputField(
+                            _passwordController, "Valor del servicio",
+                            isOnlyNumbers: true, isPassword: false),
                       ],
                     ),
                   ),
                   const SizedBox(height: 130),
-                  _buildElevatedButton(0xFF7DB006, "GUARDAR CAMBIOS", true, context),
+                  _buildElevatedButton(
+                      0xFF7DB006, "GUARDAR CAMBIOS", true, context),
                   const SizedBox(height: 20),
-                  _buildElevatedButton(0xFFC74A4D, "ELIMINAR VIAJE", false, context),
+                  _buildElevatedButton(
+                      0xFFC74A4D, "ELIMINAR VIAJE", false, context),
                   const SizedBox(height: 20),
                   _buildElevatedButton(0x809E9E9E, "CANCELAR", false, context),
                 ],
