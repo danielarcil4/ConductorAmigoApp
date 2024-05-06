@@ -5,7 +5,7 @@ import 'package:conductor_amigo/pages/chat/user_tile.dart';
 import 'package:flutter/material.dart';
 
 class UserList extends StatefulWidget {
-  const UserList({super.key});
+  const UserList({Key? key}) : super(key: key);
 
   @override
   State<UserList> createState() => _UserListState();
@@ -20,7 +20,7 @@ class _UserListState extends State<UserList> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0), // Ajusta el espaciado vertical aquí
+          padding: EdgeInsets.symmetric(vertical: 20.0),
           child: _buildUserList(),
         ),
       ),
@@ -28,44 +28,51 @@ class _UserListState extends State<UserList> {
   }
 
   Widget _buildUserList() {
-    return StreamBuilder(
+    return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _chatService.getUsersStream(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if(snapshot.hasError){
-          return const Text("Error");
+      builder: (BuildContext context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Error: ${snapshot.error}");
         }
 
-        if(snapshot.connectionState == ConnectionState.waiting){
-          return const Text("Loading ..");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator(); // Show a loading indicator
+        }
+
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Text("No users found."); // Handle empty data scenario
         }
 
         return ListView(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(), // Deshabilita el desplazamiento del ListView
-          children: snapshot.data!.map<Widget>((userData) => _buildUserListItem(userData, context)).toList(),
+          physics: NeverScrollableScrollPhysics(),
+          children: snapshot.data!.map<Widget>((userData) {
+            return _buildUserListItem(userData, context);
+          }).toList(),
         );
       },
     );
   }
 
-  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context){
-    if(userData["email"] != _authService.geCurrentUser()!.email) {
-      return UserTile(
-        text: userData["email"],
-        onTap: () {
-          Navigator.push(
+  Widget _buildUserListItem(Map<String, dynamic>? userData, BuildContext context) {
+    if (userData != null) {
+      if (userData["email"] != _authService.getCurrentUser()!.email) {
+        return UserTile(
+          text: userData["email"],
+          onTap: () {
+            Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    ChatPage(
-                      receiverEmail: userData["email"], receiverID: userData["uid"],
-                    ),
-              )
-          );
-        },
-      );
-    } else {
-      return Container();
+                builder: (context) => ChatPage(
+                  receiverEmail: userData["email"],
+                  receiverID: userData["uid"],
+                ),
+              ),
+            );
+          },
+        );
+      }
     }
+    return Container(); // or any other widget you want to display
   }
 }

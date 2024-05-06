@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../cards/ViajeAnterior.dart';
+import '../../cards/viaje_anterior.dart';
 
 class ViajesAnterioresPage extends StatefulWidget {
   const ViajesAnterioresPage({super.key});

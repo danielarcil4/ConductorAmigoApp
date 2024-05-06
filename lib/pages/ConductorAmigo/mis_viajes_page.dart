@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:conductor_amigo/pages/usuarioAmigo/edit_page.dart';
+import '../../cards/viaje_programado.dart';
 
 class MisViajesPage extends StatefulWidget {
   const MisViajesPage({super.key});
@@ -15,7 +15,6 @@ class _MisViajesPageState extends State<MisViajesPage> {
   void _performSearch(String searchText) {
     // You can implement your search logic here
     //print("Performing search for: $searchText");
-    // For demonstration, I'm just printing the search text
   }
 
   @override
@@ -35,7 +34,7 @@ class _MisViajesPageState extends State<MisViajesPage> {
             color: Colors.grey,
           ),
           label: const Text(
-            "¿A dónde vamos?",
+            "Buscar en Mis Viajes",
             style: TextStyle(
               color: Colors.grey,
               fontFamily: 'Ubuntu',
@@ -49,7 +48,7 @@ class _MisViajesPageState extends State<MisViajesPage> {
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(
                   borderRadius:
-                  BorderRadius.circular(10.0), // Cambiar el radio del borde
+                      BorderRadius.circular(10.0), // Cambiar el radio del borde
                 ),
               ),
               minimumSize: MaterialStateProperty.all(const Size(400, 40))),
@@ -65,115 +64,53 @@ class _MisViajesPageState extends State<MisViajesPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Mis Viajes Programados',
+              'Mis Viajes programados (1)',
               style: TextStyle(
                   color: Colors.black,
                   fontFamily: 'Ubuntu',
                   fontWeight: FontWeight.w400,
-                  fontSize: 30),
+                  fontSize: 27),
             ),
-            viajesProgramadosCard(
+            SizedBox(height: 10),
+            viajeProgramado(
               destino: 'Rionegro, Antioquia',
-              cantPasajeros: 'Cupos para pasajeros 3/4',
-              fechaYhora: '24 feb,7:58 PM',
+              cupos: 'Cupos para pasajeros 3/4',
+              horaDeSalida: '24 feb,7:58 PM',
+              recogida: '231',
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              indent: 100,
+              thickness: 1.5,
+              color: Colors.grey,
+              endIndent: 10,
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class viajesProgramadosCard extends StatelessWidget {
-  final String destino;
-  final String fechaYhora;
-  final String cantPasajeros;
-
-  const viajesProgramadosCard({
-    super.key,
-    required this.destino,
-    required this.fechaYhora,
-    required this.cantPasajeros,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_month,
-                  size: 50,
-                  color: Color(0xFF14612C),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        destino,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontFamily: 'Ubuntu',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 18,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        fechaYhora,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Ubuntu',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        cantPasajeros,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontFamily: 'Ubuntu',
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                    onPressed: (){
-                        Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                        builder: (context) => const EditPage()));
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      size: 30,
-                    ),
-                )
-              ],
-            ),
-          ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add your action here
+        },
+        elevation: 8,
+        backgroundColor: const Color(0xFF7DB006),
+        shape: const CircleBorder(),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
     );
   }
+
+  nuevoViaje() {}
 }
 
 class CustomSearchDelegate extends SearchDelegate<String> {
   @override
-  String get searchFieldLabel => '¿A dónde vamos?';
+  String get searchFieldLabel => 'Buscar en Mis Viajes';
 
   @override
   List<Widget> buildActions(BuildContext context) {

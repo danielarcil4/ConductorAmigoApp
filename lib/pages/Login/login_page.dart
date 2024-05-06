@@ -16,7 +16,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   String errorTextEmail = '';
   String errorTextPassword = '';
-  final RegExp _emailRegExp = RegExp(r'^[\w-.]+@udea.edu.co',);
+  final RegExp _emailRegExp = RegExp(
+    r'^[\w-.]+@udea.edu.co',
+  );
 
   Widget _buildInputField(TextEditingController controller, String labelName,
       {bool isPassword = false, String? errorText}) {
@@ -24,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
       controller: controller,
       decoration: InputDecoration(
         labelText: labelName,
-        errorText: errorText,
         labelStyle: const TextStyle(
             color: Colors.white,
             fontFamily: 'Ubuntu',
@@ -32,9 +33,7 @@ class _LoginPageState extends State<LoginPage> {
         enabledBorder: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.white, width: 2)),
         focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(
-              color: Colors.white70,
-              width: 3),
+          borderSide: BorderSide(color: Colors.white70, width: 3),
         ),
       ),
       obscureText: isPassword,
@@ -45,19 +44,16 @@ class _LoginPageState extends State<LoginPage> {
           } else if (value.length < 6) {
             return 'La contraseña debe tener al menos 6 caracteres';
           }
-          return null;
         } else {
           if (value!.isEmpty) {
             return 'Por favor, ingresa tu correo';
-          }
-          else if (!value.contains("@udea.edu.co")) {
+          } else if (!value.contains("@udea.edu.co")) {
             return 'Por favor, introduce un correo del dominio @udea.edu.co';
-          }
-          else if (!_emailRegExp.hasMatch(value)) {
+          } else if (!_emailRegExp.hasMatch(value)) {
             return 'Por favor, introduce un correo electrónico válido';
           }
-          return null;
         }
+        return null;
       },
     );
   }
@@ -87,24 +83,22 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void login(BuildContext context) async{
-
+  void login(BuildContext context) async {
     final authService = AuthService();
 
     try {
-      await authService.signInWithEmailPassword(_emailController.text, _passwordController.text);
+      await authService.signInWithEmailPassword(
+          _emailController.text, _passwordController.text);
       Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
-           );
-    }
-    
-    catch (e){
+        context,
+        MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
+      );
+    } catch (e) {
       showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text(e.toString()),
-          ),
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
       );
     }
     // Aquí puedes realizar las acciones necesarias para iniciar sesión,
@@ -150,19 +144,13 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         children: [
                           _buildInputField(
-                              _emailController,
-                              'Usuario o correo electrónico',
-                              errorText: errorTextEmail
-                          ),
+                              _emailController, 'Usuario o correo electrónico',
+                              errorText: errorTextEmail),
                           const SizedBox(
                             height: 16,
                           ),
-                          _buildInputField(
-                              _passwordController,
-                              'Contraseña',
-                              isPassword: true,
-                              errorText: errorTextPassword
-                          ),
+                          _buildInputField(_passwordController, 'Contraseña',
+                              isPassword: true, errorText: errorTextPassword),
                           const SizedBox(
                             height: 32,
                           ),

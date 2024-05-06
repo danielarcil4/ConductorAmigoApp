@@ -54,7 +54,7 @@ class ChatPage extends StatelessWidget {
   }
 
   Widget _buildMessageList(){
-    String senderID = _authService.geCurrentUser()!.uid;
+    String senderID = _authService.getCurrentUser()!.uid;
     return StreamBuilder(
         stream: _chatService.getMessages(receiverID, senderID),
         builder: (context, snapshot){
@@ -77,7 +77,7 @@ class ChatPage extends StatelessWidget {
   Widget _buildMessageItem(DocumentSnapshot doc){
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-    bool isCurrentUser = data['senderID'] == _authService.geCurrentUser()!.uid;
+    bool isCurrentUser = data['senderID'] == _authService.getCurrentUser()!.uid;
 
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
     return Container(
