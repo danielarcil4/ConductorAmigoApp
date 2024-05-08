@@ -13,15 +13,14 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _identificacionController =
-      TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _identificacionController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _placaController = TextEditingController();
   final TextEditingController _modeloController = TextEditingController();
   final TextEditingController _colorController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatpasswordController =
-      TextEditingController();
+  final TextEditingController _repeatpasswordController = TextEditingController();
 
   String? dropdownValue;
   bool showAdditionalOptions = false;
@@ -43,6 +42,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget _buildInputField(TextEditingController controller, String labelName,
       {isPassword = false,
+      isName = false,
       isOnlyNumbers = false,
       isModelo = false,
       isPlaca = false,
@@ -107,6 +107,12 @@ class _RegisterPageState extends State<RegisterPage> {
         } else if (isModelo) {
           if (value!.isEmpty) {
             return 'Por favor, ingresa el modelo del vehículo';
+          } else {
+            return null;
+          }
+        } else if (isName) {
+          if(value!.isEmpty) {
+            return 'Por favor, ingresa un nombre de usuario';
           } else {
             return null;
           }
@@ -322,6 +328,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        _buildInputField(
+                            _userNameController, "Nombre de Usuario", isName: true),
                         _buildInputField(
                             _identificacionController, "Identificacion",
                             isOnlyNumbers: true),
