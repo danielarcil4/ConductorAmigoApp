@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../cards/viaje_programado.dart';
+import 'crear_viaje_page.dart';
 
 class MisViajesPage extends StatefulWidget {
   const MisViajesPage({super.key});
@@ -92,7 +93,10 @@ class _MisViajesPageState extends State<MisViajesPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Add your action here
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CrearViajePage()), // Navega a la página crear_viaje_page.dart
+          );
         },
         elevation: 8,
         backgroundColor: const Color(0xFF7DB006),
