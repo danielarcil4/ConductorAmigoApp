@@ -95,7 +95,7 @@ class _MisViajesPageState extends State<MisViajesPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CrearViajePage()), // Navega a la página crear_viaje_page.dart
+            MaterialPageRoute(builder: (context) => const CrearViajePage()), // Navega a la página crear_viaje_page.dart
           );
         },
         elevation: 8,
