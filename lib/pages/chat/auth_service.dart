@@ -23,7 +23,7 @@ class AuthService {
   }
 
   // Sign up
-  Future<UserCredential> signUpWithEmailPassword(String email, String password, String role) async {
+  Future<UserCredential> signUpWithEmailPassword(String email, String password, String role, String name, String identification) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -33,6 +33,8 @@ class AuthService {
         'uid': userCredential.user!.uid,
         'email': email,
         'role': role,  // Add role here
+        'name': name,
+        'identification': identification,
       });
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -51,6 +53,22 @@ class AuthService {
         }
       } catch (e) {
         throw Exception('Error getting user role: $e');
+      }
+    }
+    return null;
+  }
+
+  // Get user data
+  Future<Map<String, dynamic>?> getUserData() async {
+    User? user = getCurrentUser();
+    if (user != null) {
+      try {
+        DocumentSnapshot userDoc = await _firestore.collection('Users').doc(user.uid).get();
+        if (userDoc.exists && userDoc.data() != null) {
+          return userDoc.data() as Map<String, dynamic>?;
+        }
+      } catch (e) {
+        throw Exception('Error getting user data: $e');
       }
     }
     return null;

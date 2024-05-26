@@ -266,7 +266,9 @@ class _RegisterPageState extends State<RegisterPage> {
       await _auth.signUpWithEmailPassword(
         _emailController.text,
         _passwordController.text,
-        dropdownValue!,  // Pass the role here
+        dropdownValue!,  // Pass the role here}
+        _userNameController.text,
+        _identificacionController.text,
       );
       Navigator.push(
           context,
