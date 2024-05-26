@@ -260,13 +260,18 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void signUp(BuildContext context) {
+  void signUp(BuildContext context) async {
     final _auth = AuthService();
     try {
-      _auth.signUpWithEmailPassword(
-          _emailController.text, _passwordController.text);
+      await _auth.signUpWithEmailPassword(
+        _emailController.text,
+        _passwordController.text,
+        dropdownValue!,  // Pass the role here
+      );
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const LoginPage()));
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage())
+      );
     } catch (e) {
       showDialog(
         context: context,
@@ -276,6 +281,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

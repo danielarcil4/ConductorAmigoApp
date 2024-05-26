@@ -3,6 +3,7 @@ import 'package:conductor_amigo/pages/chat/chat_page.dart';
 import 'package:conductor_amigo/pages/chat/chat_services.dart';
 import 'package:conductor_amigo/pages/chat/user_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserList extends StatefulWidget {
   const UserList({Key? key}) : super(key: key);
@@ -14,9 +15,37 @@ class UserList extends StatefulWidget {
 class _UserListState extends State<UserList> {
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
+  String? userRole;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserRole();
+  }
+
+  Future<void> _getUserRole() async {
+    try {
+      String? role = await _authService.getUserRole();
+      setState(() {
+        userRole = role;
+      });
+    } catch (e) {
+      setState(() {
+        userRole = 'unknown'; // handle error case
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (userRole == null) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -43,10 +72,18 @@ class _UserListState extends State<UserList> {
           return const Text("No users found."); // Handle empty data scenario
         }
 
+        List<Map<String, dynamic>> filteredUsers = snapshot.data!.where((userData) {
+          return userData['role'] != userRole && userData['email'] != _authService.getCurrentUser()!.email;
+        }).toList();
+
+        if (filteredUsers.isEmpty) {
+          return const Text("No users found for your role."); // Handle empty data scenario
+        }
+
         return ListView(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          children: snapshot.data!.map<Widget>((userData) {
+          children: filteredUsers.map<Widget>((userData) {
             return _buildUserListItem(userData, context);
           }).toList(),
         );
@@ -56,22 +93,20 @@ class _UserListState extends State<UserList> {
 
   Widget _buildUserListItem(Map<String, dynamic>? userData, BuildContext context) {
     if (userData != null) {
-      if (userData["email"] != _authService.getCurrentUser()!.email) {
-        return UserTile(
-          text: userData["email"],
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ChatPage(
-                  receiverEmail: userData["email"],
-                  receiverID: userData["uid"],
-                ),
+      return UserTile(
+        text: userData["email"],
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                receiverEmail: userData["email"],
+                receiverID: userData["uid"],
               ),
-            );
-          },
-        );
-      }
+            ),
+          );
+        },
+      );
     }
     return Container(); // or any other widget you want to display
   }
