@@ -1,23 +1,27 @@
 import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
+import 'package:conductor_amigo/pages/busqueda/Localizacion_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 
-class EditPage extends StatefulWidget {
-  const EditPage({super.key});
+class EditViajePage extends StatefulWidget {
+  final String location;
+  const EditViajePage({super.key, required this.location});
 
   @override
-  State<EditPage> createState() => _EditPageState();
+  State<EditViajePage> createState() => _EditViajePageState();
 }
 
-class _EditPageState extends State<EditPage> {
-  final TextEditingController _recogidaController = TextEditingController();
+class _EditViajePageState extends State<EditViajePage> {
+  final TextEditingController _searchLocationController = TextEditingController(text: "Universidad de Antioquia");
   final TextEditingController _horaController = TextEditingController();
   final TextEditingController _minutoController = TextEditingController();
-  final TextEditingController _destinoController = TextEditingController();
   final TextEditingController _valorController = TextEditingController();
   final TextEditingController _diaController = TextEditingController();
   final TextEditingController _mesController = TextEditingController();
   final TextEditingController _anioController = TextEditingController();
+  final TextEditingController _searchPlaceController = TextEditingController();
 
   final RegExp _validateHora = RegExp(r'^([01]?[0-9]|2[0-4])$');
   final RegExp _validateMinuto = RegExp(r'^([0-5]?[0-9]|60)$');
@@ -32,11 +36,11 @@ class _EditPageState extends State<EditPage> {
   String errorTextEmail = '';
   bool isVisiblePassword = false;
 
-  String? _universidadOption;
+  String? _universidadOption= 'destino';
 
   Widget _buildInputField(
       TextEditingController controller,
-      String labelName, {
+      String labelName , {
         bool isRecogida = false,
         bool isDestino = false,
         bool isValor = false,
@@ -338,7 +342,7 @@ class _EditPageState extends State<EditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Se ha editado tu viaje\n'
+                  'Se ha creado tu viaje\n'
                       'exitosamente.\n'
                       'Revisa el estado de tu\n'
                       'publicación en tu\n'
@@ -381,39 +385,86 @@ class _EditPageState extends State<EditPage> {
     );
   }
 
+  Widget _buildSearchLocationSection() {
+    if (_universidadOption == 'destino') {
+      return Column(
+        children: [
+          GooglePlaceAutoCompleteTextField(
+            textEditingController: _searchPlaceController,
+            googleAPIKey: "AIzaSyDL9HdVwqcIPxiOfY-R3mMnuOO61ojZKOI",
+            inputDecoration: InputDecoration(
+              hintText: widget.location,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+            ),
+            debounceTime: 400,
+            countries: const ["col"],
+            itemClick: (Prediction prediction) {
+              _searchPlaceController.text = prediction.description ?? "";
+            },
+          ),
+          const SizedBox(height: 10),
+          _buildInputField(_searchLocationController, 'Lugar de destino',
+              isDestino: true, readOnly: true),
+        ],
+      );
+    }
+    return Column(
+      children: [
+        _buildInputField(_searchLocationController, 'Lugar de origen',
+            isDestino: true, readOnly: true),
+        const SizedBox(height: 20),
+        GooglePlaceAutoCompleteTextField(
+          textEditingController: _searchPlaceController,
+          googleAPIKey: "AIzaSyDL9HdVwqcIPxiOfY-R3mMnuOO61ojZKOI",
+          inputDecoration: InputDecoration(
+            hintText: widget.location,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+          ),
+          debounceTime: 400,
+          countries: const ["col"],
+          itemClick: (Prediction prediction) {
+            _searchPlaceController.text = prediction.description ?? "";
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Eliminar el botón de retroceso
-        toolbarHeight: 80,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Edita tu viaje',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Ubuntu',
-                fontWeight: FontWeight.w400,
-                fontSize: 30,
-              ),
+      automaticallyImplyLeading: false, // Eliminar el botón de retroceso
+      toolbarHeight: 80,
+      title: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Edita tu viaje',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.w400,
+              fontSize: 30,
             ),
-            SizedBox(height: 5), // Espacio entre el título y el subtítulo
-            Text(
-              'Cambia los detalles de tus viajes programados',
-              style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Ubuntu',
-                fontWeight: FontWeight.w300,
-                fontSize: 16, // Tamaño de fuente más pequeño para el subtítulo
-              ),
+          ),
+          SizedBox(height: 5), // Espacio entre el título y el subtítulo
+          Text(
+            'Cambia los detalles de tus viajes programados',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.w300,
+              fontSize: 16, // Tamaño de fuente más pequeño para el subtítulo
             ),
-          ],
-        ),
-        centerTitle: false, // Desactiva el centrado del título
-        backgroundColor: const Color(0xFF0D6E2E),
+          ),
+        ],
       ),
+      centerTitle: false, // Desactiva el centrado del título
+      backgroundColor: const Color(0xFF0D6E2E),
+    ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -424,7 +475,7 @@ class _EditPageState extends State<EditPage> {
               children: [
                 const SizedBox(height: 20),
                 const Text(
-                  "¡Recuerda que los viajes programados reservados por Usuarios Amigos no pueden ser modificados!",
+                  "Recuerda que los viajes deben tener como punto de origen o lugar de destino la Universidad de Antioquia:",
                   style: TextStyle(
                       color: Colors.grey,
                       fontFamily: 'Ubuntu',
@@ -432,16 +483,7 @@ class _EditPageState extends State<EditPage> {
                       fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
-                const Text(
-                  "Universidad de Antioquia como: ",
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontFamily: 'Ubuntu',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -453,15 +495,6 @@ class _EditPageState extends State<EditPage> {
                         onChanged: (value) {
                           setState(() {
                             _universidadOption = value;
-                            if (value == 'origen') {
-                              _recogidaController.text =
-                              'Universidad de Antioquia';
-                              _destinoController.text = '';
-                            } else {
-                              _recogidaController.text = '';
-                              _destinoController.text =
-                              'Universidad de Antioquia';
-                            }
                           });
                         },
                       ),
@@ -474,15 +507,6 @@ class _EditPageState extends State<EditPage> {
                         onChanged: (value) {
                           setState(() {
                             _universidadOption = value;
-                            if (value == 'destino') {
-                              _destinoController.text =
-                              'Universidad de Antioquia';
-                              _recogidaController.text = '';
-                            } else {
-                              _destinoController.text = '';
-                              _recogidaController.text =
-                              'Universidad de Antioquia';
-                            }
                           });
                         },
                       ),
@@ -490,119 +514,145 @@ class _EditPageState extends State<EditPage> {
                   ],
                 ),
                 const SizedBox(height: 10),
-                _buildInputField(_recogidaController, 'Punto de origen',
-                    isRecogida: true,
-                    readOnly: _universidadOption == 'origen'),
+                _buildSearchLocationSection(),
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LocalizacionPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.location_on_sharp),
+                  label: const Text("Buscar la ubicacion en mapa"),
+                ),
                 const SizedBox(height: 20),
-                _buildInputField(_destinoController, 'Lugar de destino',
-                    isDestino: true, readOnly: _universidadOption == 'destino'),
-                const SizedBox(height: 10),
-                Row (
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget> [
-                    Expanded(child: DropdownButtonFormField<String>(
-                      value: dropdownValue,
-                      icon: const Icon(
-                        Icons.arrow_drop_down,
-                        size: 35,
-                      ),
-                      elevation: 16,
-                      isExpanded: true,
-                      itemHeight: 60,
-                      style: const TextStyle(color: Colors.black),
-                      items: <String>[
-                        '1',
-                        '2',
-                        '3',
-                        '4'
-                      ].map((value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16),
-                          ),
-                        );
-                      }).toList(),
-                      decoration: const InputDecoration(
-                        labelText: 'Cupos',
-                        labelStyle: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w500
+                  children: <Widget>[
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        value: dropdownValue,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          size: 35,
                         ),
-                        enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey, width: 1)),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
+                        elevation: 16,
+                        isExpanded: true,
+                        itemHeight: 60,
+                        style: const TextStyle(color: Colors.black),
+                        items: <String>['1', '2', '3', '4'].map((value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Ubuntu',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16),
+                            ),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Cupos',
+                          labelStyle: TextStyle(
                               color: Colors.grey,
-                              width: 2), // Cambia el color de resaltado aquí
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.w500),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.grey, width: 1)),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 2), // Cambia el color de resaltado aquí
+                          ),
                         ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Elija el número de \n pasajeros disponibles'; // Mensaje de er
+                            // ror si no se selecciona ninguna opción
+                          }
+                          return null; // Retorna null si la validación es exitosa
+                        },
+                        onChanged: (String? value) {
+                          setState(() {
+                            dropdownValue = value;
+                          });
+                        },
                       ),
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Elija el número de \n pasajeros disponibles'; // Mensaje de er
-                          // ror si no se selecciona ninguna opción
-                        }
-                        return null; // Retorna null si la validación es exitosa
-                      },
-                      onChanged: (String? value) {
-                        setState(() {
-                          dropdownValue = value;
-                        });
-                      },
-                    ),),
+                    ),
                     const SizedBox(width: 10),
-                    Expanded(child: _buildInputField(_valorController, "Costo",isOnlyNumbers: true,
-                        isValor: true),),
+                    Expanded(
+                      child: _buildInputField(_valorController, "Costo",
+                          isOnlyNumbers: true, isValor: true),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 30),
-                const Row (
+                const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Expanded(child: Text(
-                        'Fecha de salida',
-                        textAlign: TextAlign.left,
-                      )),
+                      Expanded(
+                          child: Text(
+                            'Fecha de salida',
+                            textAlign: TextAlign.left,
+                          )),
                       SizedBox(width: 10),
-                      Expanded(child: Text(
-                        'Hora de Salida',
-                        textAlign: TextAlign.right,
-                      )),
-                    ]
-                ),
+                      Expanded(
+                          child: Text(
+                            'Hora de Salida',
+                            textAlign: TextAlign.right,
+                          )),
+                    ]),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget> [
-                      Expanded(child: _buildInputField(_diaController, "DD", isDia: true, isOnlyNumbers: true),),
+                    children: <Widget>[
+                      Expanded(
+                        child: _buildInputField(_diaController, "DD",
+                            isDia: true, isOnlyNumbers: true),
+                      ),
                       const SizedBox(width: 10),
                       const Text('/'),
                       const SizedBox(width: 10),
-                      Expanded(child: _buildInputField(_mesController, "MM", isMes: true, isOnlyNumbers: true),),
+                      Expanded(
+                        child: _buildInputField(_mesController, "MM",
+                            isMes: true, isOnlyNumbers: true),
+                      ),
                       const SizedBox(width: 10),
                       const Text('/'),
                       const SizedBox(width: 10),
-                      Expanded(child: _buildInputField(_anioController, "AA", isAnio: true, isOnlyNumbers: true),),
+                      Expanded(
+                        child: _buildInputField(_anioController, "AA",
+                            isAnio: true, isOnlyNumbers: true),
+                      ),
                       const SizedBox(width: 30),
-                      Expanded(child: _buildInputField(_horaController, "HH", isHora: true, isOnlyNumbers: true),),
+                      Expanded(
+                        child: _buildInputField(_horaController, "HH",
+                            isHora: true, isOnlyNumbers: true),
+                      ),
                       const SizedBox(width: 10),
                       const Text(':'),
                       const SizedBox(width: 10),
-                      Expanded(child: _buildInputField(_minutoController, "MM", isMinuto: true, isOnlyNumbers: true),),
-                    ]
-                ),
+                      Expanded(
+                        child: _buildInputField(_minutoController, "MM",
+                            isMinuto: true, isOnlyNumbers: true),
+                      ),
+                    ]),
                 const SizedBox(height: 40),
-                Row (
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget> [
-                    Expanded(child: _buildElevatedButton(0xFF7DB006, "GUARDAR", true, false),),
+                  children: <Widget>[
+                    Expanded(
+                      child: _buildElevatedButton(
+                          0xFF7DB006, "GUARDAR", true, false),
+                    ),
                     const SizedBox(width: 20),
-                    Expanded(child: _buildElevatedButton(0x809E9E9E, "CANCELAR", false, false),),
+                    Expanded(
+                      child: _buildElevatedButton(
+                          0x809E9E9E, "CANCELAR", false, false),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -615,3 +665,4 @@ class _EditPageState extends State<EditPage> {
     );
   }
 }
+/**/

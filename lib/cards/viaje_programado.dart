@@ -105,7 +105,7 @@ class viajeProgramado extends StatelessWidget {
             IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const EditPage()));
+                    MaterialPageRoute(builder: (context) => const EditViajePage(location: 'Buscar lugar')));
               },
               icon: const Icon(
                 Icons.edit_square,

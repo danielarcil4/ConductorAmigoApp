@@ -20,7 +20,7 @@ class _UserListState extends State<UserList> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.0),
+          padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: _buildUserList(),
         ),
       ),
@@ -36,16 +36,16 @@ class _UserListState extends State<UserList> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show a loading indicator
+          return const CircularProgressIndicator(); // Show a loading indicator
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text("No users found."); // Handle empty data scenario
+          return const Text("No users found."); // Handle empty data scenario
         }
 
         return ListView(
           shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           children: snapshot.data!.map<Widget>((userData) {
             return _buildUserListItem(userData, context);
           }).toList(),
