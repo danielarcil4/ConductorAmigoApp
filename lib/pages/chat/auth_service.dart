@@ -32,7 +32,7 @@ class AuthService {
       await _firestore.collection("Users").doc(userCredential.user!.uid).set({
         'uid': userCredential.user!.uid,
         'email': email,
-        'role': role,  // Add role here
+        'role': role,
         'name': name,
         'identification': identification,
       });
@@ -72,5 +72,53 @@ class AuthService {
       }
     }
     return null;
+  }
+
+  // Add a new trip
+  Future<void> addTrip(String destino, String cupos, String horaDeSalida, String recogida) async {
+    User? user = getCurrentUser();
+    if (user != null) {
+      try {
+        await _firestore.collection('Trips').add({
+          'userId': user.uid,
+          'destino': destino,
+          'cupos': cupos,
+          'horaDeSalida': horaDeSalida,
+          'recogida': recogida,
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+      } catch (e) {
+        throw Exception('Error adding trip: $e');
+      }
+    } else {
+      throw Exception('No user logged in');
+    }
+  }
+
+  // Get all trips for the current user
+  Future<List<Map<String, dynamic>>> getTrips() async {
+    User? user = getCurrentUser();
+    if (user != null) {
+      try {
+        QuerySnapshot querySnapshot = await _firestore
+            .collection('Trips')
+            .where('userId', isEqualTo: user.uid)
+            .get();
+        return querySnapshot.docs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+      } catch (e) {
+        throw Exception('Error getting trips: $e');
+      }
+    } else {
+      throw Exception('No user logged in');
+    }
+  }
+
+  // Delete a trip
+  Future<void> deleteTrip(String tripId) async {
+    try {
+      await _firestore.collection('Trips').doc(tripId).delete();
+    } catch (e) {
+      throw Exception('Error deleting trip: $e');
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../cards/viaje_programado.dart';
 import 'crear_viaje_page.dart';
+import 'package:conductor_amigo/pages/chat/auth_service.dart'; // Asegúrate de importar correctamente
 
 class MisViajesPage extends StatefulWidget {
   const MisViajesPage({super.key});
@@ -10,16 +11,41 @@ class MisViajesPage extends StatefulWidget {
 }
 
 class _MisViajesPageState extends State<MisViajesPage> {
+  final AuthService _authService = AuthService();
   final TextEditingController _searchController = TextEditingController();
   String _searchText = "";
+  List<Map<String, dynamic>> _viajes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTrips();
+  }
+
+  Future<void> _loadTrips() async {
+    try {
+      List<Map<String, dynamic>> trips = await _authService.getTrips();
+      setState(() {
+        _viajes = trips;
+      });
+    } catch (e) {
+      // Manejar el error de alguna manera
+    }
+  }
 
   void _performSearch(String searchText) {
-    // You can implement your search logic here
-    //print("Performing search for: $searchText");
+    setState(() {
+      _searchText = searchText;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> _filteredViajes = _viajes
+        .where((viaje) =>
+        viaje['destino'].toLowerCase().contains(_searchText.toLowerCase()))
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -27,7 +53,7 @@ class _MisViajesPageState extends State<MisViajesPage> {
           onPressed: () {
             showSearch(
               context: context,
-              delegate: CustomSearchDelegate(),
+              delegate: CustomSearchDelegate(_viajes),
             );
           },
           icon: const Icon(
@@ -45,48 +71,50 @@ class _MisViajesPageState extends State<MisViajesPage> {
           style: ButtonStyle(
               alignment: Alignment.centerLeft,
               backgroundColor: MaterialStateProperty.all(Colors.white),
-              // Color del fondo
               shape: MaterialStateProperty.all(
                 RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(10.0), // Cambiar el radio del borde
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
               minimumSize: MaterialStateProperty.all(const Size(400, 40))),
-        ), //
-
+        ),
         flexibleSpace: Container(
           color: const Color(0xFF7DB006),
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Mis Viajes programados (1)',
-              style: TextStyle(
+              'Mis Viajes programados (${_filteredViajes.length})',
+              style: const TextStyle(
                   color: Colors.black,
                   fontFamily: 'Ubuntu',
                   fontWeight: FontWeight.w400,
                   fontSize: 27),
             ),
-            SizedBox(height: 10),
-            viajeProgramado(
-              destino: 'Rionegro, Antioquia',
-              cupos: 'Cupos para pasajeros 3/4',
-              horaDeSalida: '24 feb,7:58 PM',
-              recogida: '231',
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Divider(
-              indent: 100,
-              thickness: 1.5,
-              color: Colors.grey,
-              endIndent: 10,
+            const SizedBox(height: 10),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _filteredViajes.length,
+                itemBuilder: (context, index) {
+                  final viaje = _filteredViajes[index];
+                  return Column(
+                    children: [
+                      ViajeProgramadoCard(viaje: viaje),
+                      const SizedBox(height: 10),
+                      const Divider(
+                        indent: 100,
+                        thickness: 1.5,
+                        color: Colors.grey,
+                        endIndent: 10,
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -95,8 +123,9 @@ class _MisViajesPageState extends State<MisViajesPage> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const CrearViajePage(location: 'Buscar lugar')), // Navega a la página crear_viaje_page.dart
-          );
+            MaterialPageRoute(
+                builder: (context) => const CrearViajePage(location: 'Buscar lugar')),
+          ).then((_) => _loadTrips());  // Recargar los viajes al regresar de la página de creación
         },
         elevation: 8,
         backgroundColor: const Color(0xFF7DB006),
@@ -108,17 +137,48 @@ class _MisViajesPageState extends State<MisViajesPage> {
       ),
     );
   }
+}
 
-  nuevoViaje() {}
+class ViajeProgramadoCard extends StatelessWidget {
+  final Map<String, dynamic> viaje;
+
+  const ViajeProgramadoCard({required this.viaje});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          viaje['destino'],
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 5),
+        Text(viaje['cupos']),
+        const SizedBox(height: 5),
+        Text(viaje['horaDeSalida']),
+        const SizedBox(height: 5),
+        Text(viaje['recogida']),
+        const SizedBox(height: 5),
+        Text(viaje['destino']),
+      ],
+    );
+  }
 }
 
 class CustomSearchDelegate extends SearchDelegate<String> {
+  final List<Map<String, dynamic>> viajes;
+
+  CustomSearchDelegate(this.viajes);
+
   @override
   String get searchFieldLabel => 'Buscar en Mis Viajes';
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    // Acciones para el AppBar (icono de limpieza, etc.)
     return [
       IconButton(
         icon: const Icon(Icons.clear),
@@ -131,7 +191,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
-    // Icono a la izquierda del AppBar (generalmente el botón de atrás)
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
@@ -142,17 +201,43 @@ class CustomSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // Muestra los resultados basados en la búsqueda actual
-    return Center(
-      child: Text('Results for: $query'),
+    List<Map<String, dynamic>> _filteredViajes = viajes
+        .where((viaje) =>
+        viaje['destino'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return ListView.builder(
+      itemCount: _filteredViajes.length,
+      itemBuilder: (context, index) {
+        final viaje = _filteredViajes[index];
+        return ListTile(
+          title: Text(viaje['destino']),
+          subtitle: Text(viaje['cupos']),
+        );
+      },
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    // Muestra sugerencias mientras se escribe la búsqueda
-    return Center(
-      child: Text('Suggestions for: $query'),
+    List<Map<String, dynamic>> _filteredViajes = viajes
+        .where((viaje) =>
+        viaje['destino'].toLowerCase().contains(query.toLowerCase()))
+        .toList();
+
+    return ListView.builder(
+      itemCount: _filteredViajes.length,
+      itemBuilder: (context, index) {
+        final viaje = _filteredViajes[index];
+        return ListTile(
+          title: Text(viaje['destino']),
+          subtitle: Text(viaje['cupos']),
+          onTap: () {
+            query = viaje['destino'];
+            showResults(context);
+          },
+        );
+      },
     );
   }
 }

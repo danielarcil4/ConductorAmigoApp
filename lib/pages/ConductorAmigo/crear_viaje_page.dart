@@ -1,3 +1,4 @@
+import 'package:conductor_amigo/pages/chat/auth_service.dart';
 import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/busqueda/Localizacion_page.dart';
 import 'package:flutter/material.dart';
@@ -36,23 +37,23 @@ class _CrearViajePageState extends State<CrearViajePage> {
   String errorTextEmail = '';
   bool isVisiblePassword = false;
 
-  String? _universidadOption= 'destino';
+  String? _universidadOption = 'destino';
 
   Widget _buildInputField(
-    TextEditingController controller,
-    String labelName , {
-    bool isRecogida = false,
-    bool isDestino = false,
-    bool isValor = false,
-    bool isDia = false,
-    bool isMes = false,
-    bool isAnio = false,
-    bool isHora = false,
-    bool isMinuto = false,
-    bool isOnlyNumbers = false,
-    errorText,
-    bool readOnly = false,
-  }) {
+      TextEditingController controller,
+      String labelName, {
+        bool isRecogida = false,
+        bool isDestino = false,
+        bool isValor = false,
+        bool isDia = false,
+        bool isMes = false,
+        bool isAnio = false,
+        bool isHora = false,
+        bool isMinuto = false,
+        bool isOnlyNumbers = false,
+        errorText,
+        bool readOnly = false,
+      }) {
     return TextFormField(
       controller: controller,
       readOnly: readOnly,
@@ -129,11 +130,11 @@ class _CrearViajePageState extends State<CrearViajePage> {
   }
 
   Widget _buildElevatedButton(
-    int colorButton,
-    String text,
-    bool guardarCambios,
-    bool eliminarMensaje,
-  ) {
+      int colorButton,
+      String text,
+      bool guardarCambios,
+      bool eliminarMensaje,
+      ) {
     return ElevatedButton(
       onPressed: () {
         if (guardarCambios) {
@@ -141,18 +142,18 @@ class _CrearViajePageState extends State<CrearViajePage> {
             updateCambios();
           }
         } else if (eliminarMensaje) {
-          _mensajeEliminar(context);
+          _showEliminarDialog(context);
         } else {
-          _mensajeCancelar(context);
+          _showCancelarDialog(context);
         }
       },
       style: ElevatedButton.styleFrom(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Color(colorButton),
-          elevation: 20,
-          shadowColor: const Color(0xFF14612C),
-          minimumSize: const Size.fromHeight(50)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: Color(colorButton),
+        elevation: 20,
+        shadowColor: const Color(0xFF14612C),
+        minimumSize: const Size.fromHeight(50),
+      ),
       child: Text(
         text,
         style: const TextStyle(
@@ -163,7 +164,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
     );
   }
 
-  void _mensajeEliminar(BuildContext context) {
+  void _showEliminarDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -173,7 +174,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
               '¿Estás segur@?',
               textAlign: TextAlign.center,
               style:
-                  TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -181,11 +182,11 @@ class _CrearViajePageState extends State<CrearViajePage> {
               children: [
                 const Text(
                   'Eliminarás permanentemente\n'
-                  'tu viaje programado.\n'
-                  'Recuerda que serás penalizado\n'
-                  'si eliminas tu viaje a 2 horas o\n'
-                  'menos antes de la hora de\n'
-                  'salida',
+                      'tu viaje programado.\n'
+                      'Recuerda que serás penalizado\n'
+                      'si eliminas tu viaje a 2 horas o\n'
+                      'menos antes de la hora de\n'
+                      'salida',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -219,7 +220,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const ConductorAmigoPage()));
+                                const ConductorAmigoPage()));
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -245,7 +246,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
     );
   }
 
-  void _mensajeCancelar(BuildContext context) {
+  void _showCancelarDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -253,10 +254,10 @@ class _CrearViajePageState extends State<CrearViajePage> {
         return AlertDialog(
             title: const Text(
               'Ya casi está...\n'
-              '¿Estás segur@?',
+                  '¿Estás segur@?',
               textAlign: TextAlign.center,
               style:
-                  TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
             ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -264,8 +265,8 @@ class _CrearViajePageState extends State<CrearViajePage> {
               children: [
                 const Text(
                   'Verifica que los datos sean\n'
-                  'correctos y que no se te olvide\n'
-                  'nada.\n',
+                      'correctos y que no se te olvide\n'
+                      'nada.\n',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -299,7 +300,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    const ConductorAmigoPage()));
+                                const ConductorAmigoPage()));
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -325,63 +326,125 @@ class _CrearViajePageState extends State<CrearViajePage> {
     );
   }
 
-  void updateCambios() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Construye el cuadro de diálogo personalizado
-        return AlertDialog(
-            title: const Text(
+  void updateCambios() async {
+    final authService = AuthService();
+
+    final user = authService.getCurrentUser();
+
+    if (user != null) {
+      try {
+        String horaDeSalida = "${_horaController.text}:${_minutoController.text}";
+        await authService.addTrip(
+          _searchPlaceController.text,
+          _valorController.text,
+          horaDeSalida,
+          _searchLocationController.text,
+        );
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildCustomDialog(
+              context,
               'Felicidades!!!',
-              textAlign: TextAlign.center,
-              style:
-                  TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Se ha creado tu viaje\n'
-                  'exitosamente.\n'
-                  'Revisa el estado de tu\n'
-                  'publicación en tu\n'
-                  'perfil de conductor.',
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ConductorAmigoPage()));
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                      ),
-                      child: const Text(
-                        'ACEPTAR',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.green),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            backgroundColor: Colors.white);
-      },
+              'Se ha creado tu viaje exitosamente.\nRevisa el estado de tu publicación en tu perfil de conductor.',
+              null,
+              null,
+              null,
+              'ACEPTAR',
+              Colors.green,
+                  () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ConductorAmigoPage())),
+            );
+          },
+        );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildCustomDialog(
+              context,
+              'Error',
+              'Ocurrió un error al crear el viaje. Por favor, intenta nuevamente.',
+              null,
+              null,
+              null,
+              'ACEPTAR',
+              Colors.red,
+                  () => Navigator.of(context).pop(),
+            );
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _buildCustomDialog(
+            context,
+            'Error',
+            'No se pudo autenticar al usuario. Por favor, intenta nuevamente.',
+            null,
+            null,
+            null,
+            'ACEPTAR',
+            Colors.red,
+                () => Navigator.of(context).pop(),
+          );
+        },
+      );
+    }
+  }
+
+  AlertDialog _buildCustomDialog(
+      BuildContext context,
+      String title,
+      String content,
+      String? leftButtonText,
+      Color? leftButtonColor,
+      VoidCallback? leftButtonAction,
+      String rightButtonText,
+      Color rightButtonColor,
+      VoidCallback rightButtonAction,
+      ) {
+    return AlertDialog(
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w300),
+          ),
+          const SizedBox(height: 16),
+          if (leftButtonText != null && leftButtonColor != null && leftButtonAction != null)
+            _buildDialogButton(leftButtonText, leftButtonColor, leftButtonAction),
+          const SizedBox(height: 16),
+          _buildDialogButton(rightButtonText, rightButtonColor, rightButtonAction),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDialogButton(String text, Color color, VoidCallback action) {
+    return ElevatedButton(
+      onPressed: action,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: color,
+        elevation: 20,
+        shadowColor: const Color(0xFF14612C),
+        minimumSize: const Size.fromHeight(50),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontWeight: FontWeight.w300),
+      ),
     );
   }
 
@@ -469,23 +532,87 @@ class _CrearViajePageState extends State<CrearViajePage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 const Text(
-                  "Recuerda que los viajes deben tener como punto de origen o lugar de destino la Universidad de Antioquia:",
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontFamily: 'Ubuntu',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14),
+                  'Día del Viaje',
                   textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w400, fontSize: 16),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: _buildInputField(
+                        _diaController,
+                        'Día',
+                        isDia: true,
+                        isOnlyNumbers: true,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInputField(
+                        _mesController,
+                        'Mes',
+                        isMes: true,
+                        isOnlyNumbers: true,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInputField(
+                        _anioController,
+                        'Año',
+                        isAnio: true,
+                        isOnlyNumbers: true,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Hora del Viaje',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w400, fontSize: 16),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: _buildInputField(
+                        _horaController,
+                        'Hora',
+                        isHora: true,
+                        isOnlyNumbers: true,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: _buildInputField(
+                        _minutoController,
+                        'Minuto',
+                        isMinuto: true,
+                        isOnlyNumbers: true,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                _buildInputField(
+                  _valorController,
+                  'Valor del Viaje (COP)',
+                  isValor: true,
+                  isOnlyNumbers: true,
+                ),
+                const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -521,128 +648,13 @@ class _CrearViajePageState extends State<CrearViajePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const LocalizacionPage()),
+                      MaterialPageRoute(builder: (context) => const LocalizacionPage()),
                     );
                   },
                   icon: const Icon(Icons.location_on_sharp),
                   label: const Text("Buscar la ubicacion en mapa"),
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: dropdownValue,
-                        icon: const Icon(
-                          Icons.arrow_drop_down,
-                          size: 35,
-                        ),
-                        elevation: 16,
-                        isExpanded: true,
-                        itemHeight: 60,
-                        style: const TextStyle(color: Colors.black),
-                        items: <String>['1', '2', '3', '4'].map((value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Ubuntu',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 16),
-                            ),
-                          );
-                        }).toList(),
-                        decoration: const InputDecoration(
-                          labelText: 'Cupos',
-                          labelStyle: TextStyle(
-                              color: Colors.grey,
-                              fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.w500),
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.grey, width: 1)),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.grey,
-                                width: 2), // Cambia el color de resaltado aquí
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Elija el número de \n pasajeros disponibles'; // Mensaje de er
-                            // ror si no se selecciona ninguna opción
-                          }
-                          return null; // Retorna null si la validación es exitosa
-                        },
-                        onChanged: (String? value) {
-                          setState(() {
-                            dropdownValue = value;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: _buildInputField(_valorController, "Costo",
-                          isOnlyNumbers: true, isValor: true),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-                const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                          child: Text(
-                        'Fecha de salida',
-                        textAlign: TextAlign.left,
-                      )),
-                      SizedBox(width: 10),
-                      Expanded(
-                          child: Text(
-                        'Hora de Salida',
-                        textAlign: TextAlign.right,
-                      )),
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Expanded(
-                        child: _buildInputField(_diaController, "DD",
-                            isDia: true, isOnlyNumbers: true),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text('/'),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildInputField(_mesController, "MM",
-                            isMes: true, isOnlyNumbers: true),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text('/'),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildInputField(_anioController, "AA",
-                            isAnio: true, isOnlyNumbers: true),
-                      ),
-                      const SizedBox(width: 30),
-                      Expanded(
-                        child: _buildInputField(_horaController, "HH",
-                            isHora: true, isOnlyNumbers: true),
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(':'),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _buildInputField(_minutoController, "MM",
-                            isMinuto: true, isOnlyNumbers: true),
-                      ),
-                    ]),
-                const SizedBox(height: 40),
+                const SizedBox(height: 32),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
