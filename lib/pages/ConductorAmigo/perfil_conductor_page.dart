@@ -1,5 +1,7 @@
+import 'package:conductor_amigo/models/conductor_amigo_user.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/provider_user.dart';
 import '../Login/login_page.dart';
 
 class PerfilConductorPage extends StatefulWidget {
@@ -10,18 +12,6 @@ class PerfilConductorPage extends StatefulWidget {
 }
 
 class _PerfilConductorPageState extends State<PerfilConductorPage> {
-  final TextEditingController _identificacionController =
-  TextEditingController(text: "1004.193.180");
-  final TextEditingController _correoController =
-  TextEditingController(text: "daniel.yepez@udea.edu.co");
-  final TextEditingController _placaController =
-  TextEditingController(text: "AUY 640");
-  final TextEditingController _modeloController =
-  TextEditingController(text: "Chevrolet Optra");
-  final TextEditingController _colorController =
-  TextEditingController(text: "Gris");
-  final TextEditingController _rolController =
-  TextEditingController(text: "Conductor Amigo");
 
   Widget _buildElevatedButton(int colorButton, String text, bool cerrarSesion) {
     return ElevatedButton(
@@ -125,6 +115,21 @@ class _PerfilConductorPageState extends State<PerfilConductorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = UsuarioProvider.of(context)?.usuario;
+    final TextEditingController identificacionController =
+    TextEditingController(text: user?.identificacion);
+    final TextEditingController correoController =
+    TextEditingController(text: user?.email);
+    TextEditingController? placaController;
+    TextEditingController? modeloController;
+    TextEditingController? colorController;
+    if (user is ConductorAmigo) {
+      placaController = TextEditingController(text: user.placa);
+      modeloController = TextEditingController(text: user.modelo);
+      colorController = TextEditingController(text: user.color);
+    }
+    final TextEditingController rolController =
+    TextEditingController(text: user?.rol);
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -148,9 +153,6 @@ class _PerfilConductorPageState extends State<PerfilConductorPage> {
                   maxWidth: 200,
                   maxHeight: 200,
                   alignment: Alignment.center,
-                  // Without the OverflowBox, the child widget would be
-                  // constrained to the size of the parent container
-                  // and would not overflow the parent container.
                   child: Icon(
                     Icons.account_circle_sharp,
                     color: Colors.grey,
@@ -159,9 +161,9 @@ class _PerfilConductorPageState extends State<PerfilConductorPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Daniel Yépez',
-                style: TextStyle(
+               Text(
+                user!.nombre,
+                style: const TextStyle(
                     color: Colors.black,
                     fontFamily: 'Ubuntu',
                     fontWeight: FontWeight.w400,
@@ -212,12 +214,13 @@ class _PerfilConductorPageState extends State<PerfilConductorPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: [
-                      _buildInputField(_identificacionController, "Identificacion"),
-                      _buildInputField(_correoController, "Correo Institucional"),
-                      _buildInputField(_rolController, "Rol"),
-                      _buildInputField(_modeloController, "Modelo Vehiculo"),
-                      _buildInputField(_placaController, "Placa Vehiculo"),
-                      _buildInputField(_colorController, "Color Vehiculo"),
+                      _buildInputField(identificacionController, "Identificacion"),
+                      _buildInputField(correoController, "Correo Institucional"),
+                      _buildInputField(rolController, "Rol"),
+                      _buildInputField(modeloController!, "Modelo Vehiculo"),
+                      _buildInputField(placaController!, "Placa Vehiculo"),
+                      _buildInputField(colorController!, "Color Vehiculo"),
+
                       const SizedBox(height: 60),
                       _buildElevatedButton(0xFFC74A4D, "Cerrar Sesion", true),
                       const SizedBox(height: 20),

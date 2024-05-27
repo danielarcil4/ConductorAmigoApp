@@ -1,5 +1,3 @@
-import 'package:conductor_amigo/pages/ConductorAmigo/crear_viaje_page.dart';
-import 'package:conductor_amigo/pages/Login/login_page.dart';
 import 'package:conductor_amigo/pages/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

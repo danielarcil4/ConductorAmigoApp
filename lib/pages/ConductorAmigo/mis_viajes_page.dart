@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../cards/viaje_programado.dart';
 import 'crear_viaje_page.dart';
 import 'package:conductor_amigo/pages/chat/auth_service.dart'; // Asegúrate de importar correctamente
 
@@ -142,7 +141,7 @@ class _MisViajesPageState extends State<MisViajesPage> {
 class ViajeProgramadoCard extends StatelessWidget {
   final Map<String, dynamic> viaje;
 
-  const ViajeProgramadoCard({required this.viaje});
+  const ViajeProgramadoCard({super.key, required this.viaje});
 
   @override
   Widget build(BuildContext context) {

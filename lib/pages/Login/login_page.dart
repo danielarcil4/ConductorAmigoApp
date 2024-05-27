@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:conductor_amigo/models/conductor_amigo_user.dart';
+import 'package:conductor_amigo/models/provider_user.dart';
+import 'package:conductor_amigo/models/usuario_comun_user.dart';
+import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/chat/auth_service.dart';
 import 'package:conductor_amigo/pages/Login/register_page.dart';
 import 'package:conductor_amigo/pages/usuarioAmigo/usuario_comun_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -85,14 +91,38 @@ class _LoginPageState extends State<LoginPage> {
 
   void login(BuildContext context) async {
     final authService = AuthService();
-
+    final firestore = FirebaseFirestore.instance;
     try {
-      await authService.signInWithEmailPassword(
+      UserCredential userCredential = await authService.signInWithEmailPassword(
           _emailController.text, _passwordController.text);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
-      );
+
+// Obtén el UID del usuario
+      String uid = userCredential.user!.uid;
+      DocumentSnapshot user =
+          (await firestore.collection('Users').doc(uid).get());
+
+      if (user['rol'] == 'Conductor Amigo') {
+        ConductorAmigo usuario =
+            ConductorAmigo.fromMap(user.data() as Map<String, dynamic>);
+        // Crear el UsuarioProvider con el usuario obtenido
+        UsuarioProvider usuarioProvider = UsuarioProvider(
+            usuario: usuario, child: const ConductorAmigoPage());
+
+        // Pasa el widget ConductorAmigoPage que contiene el UsuarioProvider a MaterialPageRoute
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => usuarioProvider),
+        );
+      } else {
+        UsuarioComun usuario =
+            UsuarioComun.fromMap(user.data() as Map<String, dynamic>);
+        UsuarioProvider usuarioProvider =
+            UsuarioProvider(usuario: usuario, child: const UsuarioComunPage());
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => usuarioProvider),
+        );
+      }
     } catch (e) {
       showDialog(
         context: context,
@@ -101,24 +131,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-    // Aquí puedes realizar las acciones necesarias para iniciar sesión,
-    // como por ejemplo, autenticar al usuario utilizando Firebase Auth
-    // y luego navegar a la página correspondiente.
-    // Ejemplo:
-    // try {
-    //   final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-    //     email: _emailController.text,
-    //     password: _passwordController.text,
-    //   );
-    //   _emailController.clear();
-    //   _passwordController.clear();
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => const UsuarioComunPage()),
-    //   );
-    // } on FirebaseAuthException catch (e) {
-    //   // Manejar posibles errores de autenticación aquí
-    // }
   }
 
   @override

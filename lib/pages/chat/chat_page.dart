@@ -34,7 +34,7 @@ class ChatPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(receiverEmail), // Cambia el título según lo que desees mostrar
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.of(context).pop(); // Esta línea lleva al usuario a la página anterior
           },

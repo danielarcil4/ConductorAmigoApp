@@ -1,5 +1,5 @@
+import 'package:conductor_amigo/models/provider_user.dart';
 import 'package:flutter/material.dart';
-
 import '../Login/login_page.dart';
 
 class PerfilUsuarioPage extends StatefulWidget {
@@ -10,12 +10,6 @@ class PerfilUsuarioPage extends StatefulWidget {
 }
 
 class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
-  final TextEditingController _identificacionController =
-  TextEditingController(text: "1007.316.496");
-  final TextEditingController _correoController =
-  TextEditingController(text: "daniel.arcila@udea.edu.co");
-  final TextEditingController _rolController =
-  TextEditingController(text: "Usuario Común");
 
   Widget _buildElevatedButton(int colorButton, String text, bool cerrarSesion) {
     return ElevatedButton(
@@ -119,6 +113,13 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = UsuarioProvider.of(context)?.usuario;
+    final TextEditingController identificacionController =
+    TextEditingController(text: user?.identificacion);
+    final TextEditingController correoController =
+    TextEditingController(text: user?.email);
+    final TextEditingController rolController =
+    TextEditingController(text: user?.rol);
     return Scaffold(
       body: SingleChildScrollView(
         child: Center(
@@ -153,9 +154,9 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Daniel Gómez',
-                style: TextStyle(
+               Text(
+                user!.nombre,
+                style: const TextStyle(
                     color: Colors.black,
                     fontFamily: 'Ubuntu',
                     fontWeight: FontWeight.w400,
@@ -206,9 +207,9 @@ class _PerfilUsuarioPageState extends State<PerfilUsuarioPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
                     children: [
-                      _buildInputField(_identificacionController, "Identificacion"),
-                      _buildInputField(_correoController, "Correo Institucional"),
-                      _buildInputField(_rolController, "Rol"),
+                      _buildInputField(identificacionController, "Identificacion"),
+                      _buildInputField(correoController, "Correo Institucional"),
+                      _buildInputField(rolController, "Rol"),
                     ],
                   )),
               const SizedBox(height: 30,),

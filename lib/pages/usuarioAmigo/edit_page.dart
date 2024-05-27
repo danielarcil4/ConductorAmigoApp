@@ -1,9 +1,10 @@
-import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/busqueda/Localizacion_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+
+import '../ConductorAmigo/conductor_amigo_page.dart';
 
 class EditViajePage extends StatefulWidget {
   final String location;

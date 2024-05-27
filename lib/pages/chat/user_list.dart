@@ -3,7 +3,6 @@ import 'package:conductor_amigo/pages/chat/chat_page.dart';
 import 'package:conductor_amigo/pages/chat/chat_services.dart';
 import 'package:conductor_amigo/pages/chat/user_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserList extends StatefulWidget {
   const UserList({Key? key}) : super(key: key);
@@ -39,7 +38,7 @@ class _UserListState extends State<UserList> {
   @override
   Widget build(BuildContext context) {
     if (userRole == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
         ),
