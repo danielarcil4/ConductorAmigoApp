@@ -148,7 +148,8 @@ class _CrearViajePageState extends State<CrearViajePage> {
         }
       },
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         backgroundColor: Color(colorButton),
         elevation: 20,
         shadowColor: const Color(0xFF14612C),
@@ -264,9 +265,9 @@ class _CrearViajePageState extends State<CrearViajePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Verifica que los datos sean\n'
-                      'correctos y que no se te olvide\n'
-                      'nada.\n',
+                  'Perderás todo el proceso para\n'
+                      'programar tu viaje y tendrás\n'
+                      'que hacerlo nuevamente\n',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -545,74 +546,16 @@ class _CrearViajePageState extends State<CrearViajePage> {
                   style: TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w400, fontSize: 16),
                 ),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: _buildInputField(
-                        _diaController,
-                        'Día',
-                        isDia: true,
-                        isOnlyNumbers: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildInputField(
-                        _mesController,
-                        'Mes',
-                        isMes: true,
-                        isOnlyNumbers: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildInputField(
-                        _anioController,
-                        'Año',
-                        isAnio: true,
-                        isOnlyNumbers: true,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
                 const Text(
-                  'Hora del Viaje',
+                  "Recuerda que los viajes deben tener como punto de origen o lugar de destino la Universidad de Antioquia:",
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontFamily: 'Ubuntu',
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14),
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w400, fontSize: 16),
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: _buildInputField(
-                        _horaController,
-                        'Hora',
-                        isHora: true,
-                        isOnlyNumbers: true,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: _buildInputField(
-                        _minutoController,
-                        'Minuto',
-                        isMinuto: true,
-                        isOnlyNumbers: true,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                _buildInputField(
-                  _valorController,
-                  'Valor del Viaje (COP)',
-                  isValor: true,
-                  isOnlyNumbers: true,
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -654,23 +597,127 @@ class _CrearViajePageState extends State<CrearViajePage> {
                   icon: const Icon(Icons.location_on_sharp),
                   label: const Text("Buscar la ubicacion en mapa"),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Expanded(
-                      child: _buildElevatedButton(
-                          0xFF7DB006, "GUARDAR", true, false),
+                      child: DropdownButtonFormField<String>(
+                        value: dropdownValue,
+                        icon: const Icon(
+                          Icons.arrow_drop_down,
+                          size: 35,
+                        ),
+                        elevation: 16,
+                        isExpanded: true,
+                        itemHeight: 60,
+                        style: const TextStyle(color: Colors.black),
+                        items: <String>['1', '2', '3', '4'].map((value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(
+                              value,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Ubuntu',
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 16),
+                            ),
+                          );
+                        }).toList(),
+                        decoration: const InputDecoration(
+                          labelText: 'Cupos',
+                          labelStyle: TextStyle(
+                              color: Colors.grey,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.w500),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.grey, width: 1)),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: 2), // Cambia el color de resaltado aquí
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Elija el número de \n pasajeros disponibles'; // Mensaje de er
+                            // ror si no se selecciona ninguna opción
+                          }
+                          return null; // Retorna null si la validación es exitosa
+                        },
+                        onChanged: (String? value) {
+                          setState(() {
+                            dropdownValue = value;
+                          });
+                        },
+                      ),
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     Expanded(
-                      child: _buildElevatedButton(
-                          0x809E9E9E, "CANCELAR", false, false),
+                      child: _buildInputField(
+                          _valorController,
+                          'Valor del Viaje (COP)',
+                          isOnlyNumbers: true,
+                          isValor: true),
                     ),
                   ],
                 ),
+                const SizedBox(height: 30),
+                const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Expanded(
+                          child: Text(
+                            'Fecha de salida',
+                            textAlign: TextAlign.left,
+                          )),
+                      SizedBox(width: 10),
+                      Expanded(
+                          child: Text(
+                            'Hora de Salida',
+                            textAlign: TextAlign.right,
+                          )),
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: _buildInputField(_diaController, "DD",
+                            isDia: true, isOnlyNumbers: true),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text('/'),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildInputField(_mesController, "MM",
+                            isMes: true, isOnlyNumbers: true),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text('/'),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildInputField(_anioController, "AA",
+                            isAnio: true, isOnlyNumbers: true),
+                      ),
+                      const SizedBox(width: 30),
+                      Expanded(
+                        child: _buildInputField(_horaController, "HH",
+                            isHora: true, isOnlyNumbers: true),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(':'),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildInputField(_minutoController, "MM",
+                            isMinuto: true, isOnlyNumbers: true),
+                      ),
+                    ]),
+                const SizedBox(height: 40),
+                _buildElevatedButton(0xFF7DB006, "GUARDAR", true, false),
                 const SizedBox(height: 20),
-                _buildElevatedButton(0xFFC74A4D, "ELIMINAR VIAJE", false, true),
+                _buildElevatedButton(0xFFC74A4D, "CANCELAR", false, false),
               ],
             ),
           ),
