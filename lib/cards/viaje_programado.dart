@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../pages/usuarioAmigo/edit_page.dart';
+import '../pages/ConductorAmigo/edit_page.dart';
 
 class viajeProgramado extends StatelessWidget {
   final String destino;

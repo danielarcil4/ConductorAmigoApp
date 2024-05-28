@@ -1,10 +1,11 @@
+import 'package:conductor_amigo/pages/ConductorAmigo/mis_viajes_page.dart';
+import 'package:conductor_amigo/pages/chat/auth_service.dart';
+import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/busqueda/Localizacion_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-
-import '../ConductorAmigo/conductor_amigo_page.dart';
 
 class EditViajePage extends StatefulWidget {
   final String location;
@@ -37,11 +38,11 @@ class _EditViajePageState extends State<EditViajePage> {
   String errorTextEmail = '';
   bool isVisiblePassword = false;
 
-  String? _universidadOption= 'destino';
+  String? _universidadOption = 'destino';
 
   Widget _buildInputField(
       TextEditingController controller,
-      String labelName , {
+      String labelName, {
         bool isRecogida = false,
         bool isDestino = false,
         bool isValor = false,
@@ -142,18 +143,19 @@ class _EditViajePageState extends State<EditViajePage> {
             updateCambios();
           }
         } else if (eliminarMensaje) {
-          _mensajeEliminar(context);
+          _showEliminarDialog(context);
         } else {
-          _mensajeCancelar(context);
+          _showCancelarDialog(context);
         }
       },
       style: ElevatedButton.styleFrom(
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          backgroundColor: Color(colorButton),
-          elevation: 20,
-          shadowColor: const Color(0xFF14612C),
-          minimumSize: const Size.fromHeight(50)),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: Color(colorButton),
+        elevation: 20,
+        shadowColor: const Color(0xFF14612C),
+        minimumSize: const Size.fromHeight(50),
+      ),
       child: Text(
         text,
         style: const TextStyle(
@@ -164,7 +166,7 @@ class _EditViajePageState extends State<EditViajePage> {
     );
   }
 
-  void _mensajeEliminar(BuildContext context) {
+  void _showEliminarDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -246,7 +248,7 @@ class _EditViajePageState extends State<EditViajePage> {
     );
   }
 
-  void _mensajeCancelar(BuildContext context) {
+  void _showCancelarDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -264,9 +266,9 @@ class _EditViajePageState extends State<EditViajePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Verifica que los datos sean\n'
-                      'correctos y que no se te olvide\n'
-                      'nada.\n',
+                  'Perderás todo el proceso para\n'
+                      'programar tu viaje y tendrás\n'
+                      'que hacerlo nuevamente\n',
                   style: TextStyle(
                       fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
                 ),
@@ -296,11 +298,10 @@ class _EditViajePageState extends State<EditViajePage> {
                     const SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                const ConductorAmigoPage()));
+                        // Pop current page
+                        Navigator.pop(context);
+                        // Pop one more page
+                        Navigator.pop(context);
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -313,7 +314,8 @@ class _EditViajePageState extends State<EditViajePage> {
                             fontWeight: FontWeight.w400,
                             color: Colors.red),
                       ),
-                    ),
+                    )
+
                   ],
                 ),
               ],
@@ -326,63 +328,130 @@ class _EditViajePageState extends State<EditViajePage> {
     );
   }
 
-  void updateCambios() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // Construye el cuadro de diálogo personalizado
-        return AlertDialog(
-            title: const Text(
+  void updateCambios() async {
+    final authService = AuthService();
+
+    final user = authService.getCurrentUser();
+
+    if (user != null) {
+      try {
+        String horaDeSalida = "${_horaController.text}:${_minutoController.text}";
+        await authService.addTrip(
+          _searchPlaceController.text,
+          _valorController.text,
+          horaDeSalida,
+          _searchLocationController.text,
+        );
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildCustomDialog(
+              context,
               'Felicidades!!!',
-              textAlign: TextAlign.center,
-              style:
-              TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Se ha creado tu viaje\n'
-                      'exitosamente.\n'
-                      'Revisa el estado de tu\n'
-                      'publicación en tu\n'
-                      'perfil de conductor.',
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                const ConductorAmigoPage()));
-                      },
-                      style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                      ),
-                      child: const Text(
-                        'ACEPTAR',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.w400,
-                            color: Colors.green),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            backgroundColor: Colors.white);
-      },
+              'Se ha creado tu viaje exitosamente.\nRevisa el estado de tu publicación en tu perfil de conductor.',
+              null,
+              null,
+              null,
+              'ACEPTAR',
+              Colors.green,
+                  () {
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 4;
+                });
+              },
+            );
+          },
+        );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return _buildCustomDialog(
+              context,
+              'Error',
+              'Ocurrió un error al crear el viaje. Por favor, intenta nuevamente.',
+              null,
+              null,
+              null,
+              'ACEPTAR',
+              Colors.red,
+                  () => Navigator.of(context).pop(),
+            );
+          },
+        );
+      }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return _buildCustomDialog(
+            context,
+            'Error',
+            'No se pudo autenticar al usuario. Por favor, intenta nuevamente.',
+            null,
+            null,
+            null,
+            'ACEPTAR',
+            Colors.red,
+                () => Navigator.of(context).pop(),
+          );
+        },
+      );
+    }
+  }
+
+  AlertDialog _buildCustomDialog(
+      BuildContext context,
+      String title,
+      String content,
+      String? leftButtonText,
+      Color? leftButtonColor,
+      VoidCallback? leftButtonAction,
+      String rightButtonText,
+      Color rightButtonColor,
+      VoidCallback rightButtonAction,
+      ) {
+    return AlertDialog(
+      title: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w500),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            content,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w300),
+          ),
+          const SizedBox(height: 16),
+          if (leftButtonText != null && leftButtonColor != null && leftButtonAction != null)
+            _buildDialogButton(leftButtonText, leftButtonColor, leftButtonAction),
+          const SizedBox(height: 16),
+          _buildDialogButton(rightButtonText, rightButtonColor, rightButtonAction),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDialogButton(String text, Color color, VoidCallback action) {
+    return ElevatedButton(
+      onPressed: action,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        backgroundColor: color,
+        elevation: 20,
+        shadowColor: const Color(0xFF14612C),
+        minimumSize: const Size.fromHeight(50),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontFamily: 'Ubuntu', fontWeight: FontWeight.w300),
+      ),
     );
   }
 
@@ -437,44 +506,52 @@ class _EditViajePageState extends State<EditViajePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-      automaticallyImplyLeading: false, // Eliminar el botón de retroceso
-      toolbarHeight: 80,
-      title: const Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Edita tu viaje',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.w400,
-              fontSize: 30,
+        automaticallyImplyLeading: false,
+        // Eliminar el botón de retroceso
+        toolbarHeight: 80,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Crear viaje',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Ubuntu',
+                fontWeight: FontWeight.w400,
+                fontSize: 30,
+              ),
             ),
-          ),
-          SizedBox(height: 5), // Espacio entre el título y el subtítulo
-          Text(
-            'Cambia los detalles de tus viajes programados',
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.w300,
-              fontSize: 16, // Tamaño de fuente más pequeño para el subtítulo
+            SizedBox(height: 5), // Espacio entre el título y el subtítulo
+            Text(
+              'Crea los viajes que ofertarás a otros usuarios',
+              style: TextStyle(
+                color: Colors.white,
+                fontFamily: 'Ubuntu',
+                fontWeight: FontWeight.w300,
+                fontSize: 16, // Tamaño de fuente más pequeño para el subtítulo
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
+        centerTitle: false,
+        // Desactiva el centrado del título
+        backgroundColor: const Color(0xFF0D6E2E),
       ),
-      centerTitle: false, // Desactiva el centrado del título
-      backgroundColor: const Color(0xFF0D6E2E),
-    ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
+                const Text(
+                  'Día del Viaje',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontFamily: 'Ubuntu', fontWeight: FontWeight.w400, fontSize: 16),
+                ),
+                const SizedBox(height: 16),
                 const Text(
                   "Recuerda que los viajes deben tener como punto de origen o lugar de destino la Universidad de Antioquia:",
                   style: TextStyle(
@@ -520,8 +597,7 @@ class _EditViajePageState extends State<EditViajePage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const LocalizacionPage()),
+                      MaterialPageRoute(builder: (context) => const LocalizacionPage()),
                     );
                   },
                   icon: const Icon(Icons.location_on_sharp),
@@ -586,8 +662,11 @@ class _EditViajePageState extends State<EditViajePage> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-                      child: _buildInputField(_valorController, "Costo",
-                          isOnlyNumbers: true, isValor: true),
+                      child: _buildInputField(
+                          _valorController,
+                          'Valor del Viaje (COP)',
+                          isOnlyNumbers: true,
+                          isValor: true),
                     ),
                   ],
                 ),
@@ -642,22 +721,9 @@ class _EditViajePageState extends State<EditViajePage> {
                       ),
                     ]),
                 const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: _buildElevatedButton(
-                          0xFF7DB006, "GUARDAR", true, false),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: _buildElevatedButton(
-                          0x809E9E9E, "CANCELAR", false, false),
-                    ),
-                  ],
-                ),
+                _buildElevatedButton(0xFF7DB006, "GUARDAR", true, false),
                 const SizedBox(height: 20),
-                _buildElevatedButton(0xFFC74A4D, "ELIMINAR VIAJE", false, true),
+                _buildElevatedButton(0xFFC74A4D, "CANCELAR", false, false),
               ],
             ),
           ),
@@ -666,4 +732,3 @@ class _EditViajePageState extends State<EditViajePage> {
     );
   }
 }
-/**/

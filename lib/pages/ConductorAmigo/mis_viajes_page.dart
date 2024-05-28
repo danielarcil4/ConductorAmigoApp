@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'crear_viaje_page.dart';
 import 'package:conductor_amigo/pages/chat/auth_service.dart'; // Asegúrate de importar correctamente
+import 'edit_page.dart';
 
 class MisViajesPage extends StatefulWidget {
   const MisViajesPage({super.key});
@@ -145,24 +146,42 @@ class ViajeProgramadoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Text(
-          viaje['destino'],
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        // Ícono de calendario a la izquierda
+        Column(
+          children: [
+            Icon(Icons.calendar_today, color: Colors.green),
+            Text('24\nfeb', textAlign: TextAlign.center, style: TextStyle(color: Colors.green)),
+          ],
+        ),
+        const SizedBox(width: 10),
+        // Información del viaje
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                viaje['destino'],
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 5),
+              Text('Hora de salida: ${viaje['horaDeSalida']}'),
+              const SizedBox(height: 5),
+              Text('Costo del Viaje: ${viaje['cupos']}'),
+            ],
           ),
         ),
-        const SizedBox(height: 5),
-        Text(viaje['cupos']),
-        const SizedBox(height: 5),
-        Text(viaje['horaDeSalida']),
-        const SizedBox(height: 5),
-        Text(viaje['recogida']),
-        const SizedBox(height: 5),
-        Text(viaje['destino']),
+        // Botón de editar a la derecha
+        IconButton(
+          icon: const Icon(Icons.edit, color: Colors.grey),
+          onPressed: () {
+
+          },
+        ),
       ],
     );
   }
@@ -237,6 +256,25 @@ class CustomSearchDelegate extends SearchDelegate<String> {
           },
         );
       },
+    );
+  }
+}
+
+class EditViajePage extends StatelessWidget {
+  final Map<String, dynamic> viaje;
+
+  const EditViajePage({super.key, required this.viaje});
+
+  @override
+  Widget build(BuildContext context) {
+    // Aquí puedes implementar la interfaz de edición para el viaje
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Editar Viaje"),
+      ),
+      body: Center(
+        child: Text("Editar información del viaje a ${viaje['destino']}"),
+      ),
     );
   }
 }

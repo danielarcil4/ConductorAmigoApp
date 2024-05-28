@@ -161,7 +161,7 @@ class _PerfilConductorPageState extends State<PerfilConductorPage> {
                 ),
               ),
               const SizedBox(height: 20),
-               Text(
+              Text(
                 user!.nombre,
                 style: const TextStyle(
                     color: Colors.black,

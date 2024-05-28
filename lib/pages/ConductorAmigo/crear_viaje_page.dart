@@ -1,3 +1,4 @@
+import 'package:conductor_amigo/pages/ConductorAmigo/mis_viajes_page.dart';
 import 'package:conductor_amigo/pages/chat/auth_service.dart';
 import 'package:conductor_amigo/pages/ConductorAmigo/conductor_amigo_page.dart';
 import 'package:conductor_amigo/pages/busqueda/Localizacion_page.dart';
@@ -22,7 +23,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
   final TextEditingController _diaController = TextEditingController();
   final TextEditingController _mesController = TextEditingController();
   final TextEditingController _anioController = TextEditingController();
-  final TextEditingController _searchPlaceController = TextEditingController();
+  TextEditingController? _searchPlaceController;
 
   final RegExp _validateHora = RegExp(r'^([01]?[0-9]|2[0-4])$');
   final RegExp _validateMinuto = RegExp(r'^([0-5]?[0-9]|60)$');
@@ -297,11 +298,10 @@ class _CrearViajePageState extends State<CrearViajePage> {
                     const SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                const ConductorAmigoPage()));
+                        // Pop current page
+                        Navigator.pop(context);
+                        // Pop one more page
+                        Navigator.pop(context);
                       },
                       style: TextButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -314,7 +314,8 @@ class _CrearViajePageState extends State<CrearViajePage> {
                             fontWeight: FontWeight.w400,
                             color: Colors.red),
                       ),
-                    ),
+                    )
+
                   ],
                 ),
               ],
@@ -336,7 +337,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
       try {
         String horaDeSalida = "${_horaController.text}:${_minutoController.text}";
         await authService.addTrip(
-          _searchPlaceController.text,
+          _searchPlaceController!.text,
           _valorController.text,
           horaDeSalida,
           _searchLocationController.text,
@@ -354,7 +355,12 @@ class _CrearViajePageState extends State<CrearViajePage> {
               null,
               'ACEPTAR',
               Colors.green,
-                  () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ConductorAmigoPage())),
+                  () {
+                int count = 0;
+                Navigator.popUntil(context, (route) {
+                  return count++ == 4;
+                });
+              },
             );
           },
         );
@@ -450,11 +456,12 @@ class _CrearViajePageState extends State<CrearViajePage> {
   }
 
   Widget _buildSearchLocationSection() {
+    _searchPlaceController = TextEditingController(text: widget.location);
     if (_universidadOption == 'destino') {
       return Column(
         children: [
           GooglePlaceAutoCompleteTextField(
-            textEditingController: _searchPlaceController,
+            textEditingController: TextEditingController(text: widget.location),
             googleAPIKey: "AIzaSyDL9HdVwqcIPxiOfY-R3mMnuOO61ojZKOI",
             inputDecoration: InputDecoration(
               hintText: widget.location,
@@ -464,7 +471,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
             debounceTime: 400,
             countries: const ["col"],
             itemClick: (Prediction prediction) {
-              _searchPlaceController.text = prediction.description ?? "";
+              _searchPlaceController!.text = prediction.description ?? "";
             },
           ),
           const SizedBox(height: 10),
@@ -479,7 +486,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
             isDestino: true, readOnly: true),
         const SizedBox(height: 20),
         GooglePlaceAutoCompleteTextField(
-          textEditingController: _searchPlaceController,
+          textEditingController: TextEditingController(text: widget.location),
           googleAPIKey: "AIzaSyDL9HdVwqcIPxiOfY-R3mMnuOO61ojZKOI",
           inputDecoration: InputDecoration(
             hintText: widget.location,
@@ -489,7 +496,7 @@ class _CrearViajePageState extends State<CrearViajePage> {
           debounceTime: 400,
           countries: const ["col"],
           itemClick: (Prediction prediction) {
-            _searchPlaceController.text = prediction.description ?? "";
+            _searchPlaceController!.text = prediction.description ?? "";
           },
         ),
       ],
